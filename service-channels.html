@@ -58,143 +58,157 @@
 
     <header class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-40 flex items-center justify-between px-4 shadow-sm">
         <div class="flex items-center space-x-2">
-            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg">Z</div>
-            <span class="text-sm font-bold text-slate-800">BOZ CORE</span>
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg">
+                <i class="ph ph-bank"></i>
+            </div>
+            <span class="text-sm font-bold text-slate-800">BOZ Admin</span>
         </div>
-        <div class="flex items-center space-x-4">
-            <button class="relative p-2">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300 hover:bg-slate-100 rounded-lg">
+                <i class="ph ph-list text-2xl text-slate-700"></i>
             </button>
         </div>
     </header>
 
-    <div id="mobileBackdrop" class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden transition-opacity duration-300"></div>
+    <div id="mobileBackdrop" onclick="closeMobileMenu()" class="lg:hidden fixed inset-0 bg-slate-900/60 z-40 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm"></div>
 
-    <aside id="mobileSidebar" class="lg:hidden fixed left-0 top-0 w-64 h-screen bg-slate-900 text-slate-300 flex flex-col z-50 shadow-xl overflow-y-auto pt-20" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
-            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold">Z</div>
-            <span class="text-xl font-bold tracking-wide">BOZ CORE</span>
+    <aside id="mobileSidebar" class="lg:hidden fixed left-0 top-0 w-72 h-screen bg-[#0B0F19] text-slate-300 flex flex-col z-50 shadow-2xl overflow-y-auto" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="p-6 flex items-center justify-between text-white border-b border-slate-800 bg-slate-900/50">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-green-500/30 text-white border border-white/20">
+                    <i class="ph ph-bank text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-wide block leading-none text-white">BOZ</span>
+                    <span class="text-[10px] text-emerald-400 font-mono tracking-widest uppercase font-semibold">Admin Portal</span>
+                </div>
+            </div>
+            <button onclick="closeMobileMenu()" class="p-2 bg-slate-800 text-slate-400 hover:text-white rounded-lg transition">
+                <i class="ph ph-x text-lg font-bold"></i>
+            </button>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 mt-4">
-            <a href="admin-dashboard.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-squares-four text-xl"></i>
-                <span class="text-sm font-semibold">Dashboard</span>
-            </a>
-            <a href="service-channels.html" class="nav-link nav-link-active flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 transition interactive-press">
-                <i class="ph-fill ph-sliders text-xl"></i>
-                <span class="text-sm font-bold">Service Channels</span>
-            </a>
-            <a href="users.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-users text-xl"></i>
-                <span class="text-sm font-semibold">Users</span>
-            </a>
-            <a href="payroll.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-money text-xl"></i>
-                <span class="text-sm font-semibold">Payroll</span>
-            </a>
-            <a href="calendar.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-calendar-blank text-xl"></i>
-                <span class="text-sm font-semibold">Calendar</span>
-            </a>
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-6">
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Dashboard</p>
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition interactive-press mb-1">
+                    <i class="ph ph-squares-four text-xl"></i>
+                    <span class="text-sm font-semibold">Overview</span>
+                </a>
+                <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
+                    <i class="ph-fill ph-sliders text-xl"></i>
+                    <span class="text-sm">Service Channels</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Banking Core</p>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-users text-xl"></i>
+                    <span class="text-sm font-medium">User Accounts</span>
+                </a>
+                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-hand-coins text-xl"></i>
+                    <span class="text-sm font-medium">Loan Book</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Operations & Govt</p>
+                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-money text-xl"></i>
+                    <span class="text-sm font-medium">Payroll Engine</span>
+                </a>
+                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-bank text-xl"></i>
+                    <span class="text-sm font-medium">Govt Accounts</span>
+                </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-chart-line text-xl"></i>
+                    <span class="text-sm font-medium">Analytics</span>
+                </a>
+            </div>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-slate-800">
-            <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-900/20 hover:text-red-400 transition text-slate-400">
+        <div class="p-4 mt-auto border-t border-slate-800 bg-slate-900/50">
+            <a href="login.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-400 interactive-press">
                 <i class="ph ph-sign-out text-xl"></i>
-                <span class="font-medium">Sign Out</span>
+                <span class="font-medium text-sm">Sign Out</span>
             </a>
         </div>
     </aside>
 
-    <aside class="w-72 sidebar-gradient text-slate-400 flex flex-col hidden lg:flex border-r border-slate-800 shadow-2xl relative z-20">
-        <div class="p-8 flex items-center space-x-3">
-            <div class="bg-indigo-500 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
-                <i class="ph-fill ph-bank text-white text-2xl"></i>
+    <aside class="w-64 bg-[#0B0F19] text-slate-400 flex flex-col hidden lg:flex border-r border-slate-800 shadow-2xl relative z-20">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-[#0B0F19] -z-10"></div>
+        
+        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-green-500/30 text-white border border-white/20">
+                <i class="ph ph-bank text-xl"></i>
             </div>
             <div>
-                <h1 class="text-white font-extrabold tracking-tight text-xl">BOZ CORE</h1>
-                <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.2em]">Admin Portal</p>
+                <span class="text-lg font-extrabold tracking-wide block leading-none text-white">BOZ</span>
+                <span class="text-[10px] text-emerald-400 font-mono tracking-widest uppercase font-semibold">Admin Portal</span>
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-4 pb-8 space-y-6 hide-scrollbar">
+        <div class="flex-1 overflow-y-auto py-6 px-4 space-y-8 hide-scrollbar">
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Dashboard</p>
-                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Dashboard</p>
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
                     <i class="ph ph-squares-four text-xl group-hover:text-indigo-400"></i>
                     <span class="text-sm font-semibold">Overview</span>
                 </a>
-            </div>
-
-            <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Banking Core</p>
-                <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm interactive-press mb-1">
+                <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
                     <i class="ph-fill ph-sliders text-xl"></i>
-                    <span class="text-sm font-bold flex-1">Service Channels</span>
-                </a>
-                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
-                    <i class="ph ph-users text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">User Accounts</span>
-                </a>
-                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
-                    <i class="ph ph-hand-coins text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">Loan Book</span>
+                    <span class="text-sm">Service Channels</span>
                 </a>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Internal Operations</p>
-                <a href="calendar.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
-                    <i class="ph ph-calendar-blank text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold flex-1">Systems Calendar</span>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Banking Core</p>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-users text-xl"></i>
+                    <span class="font-medium text-sm">User Accounts</span>
                 </a>
-                <a href="staff.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
-                    <i class="ph ph-identification-badge text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">Staff Directory</span>
-                </a>
-                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
-                    <i class="ph ph-money text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">Payroll Engine</span>
+                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-hand-coins text-xl"></i>
+                    <span class="font-medium text-sm">Loan Book</span>
                 </a>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Government</p>
-                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
-                    <i class="ph ph-bank text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">Government Accounts</span>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Internal Operations</p>
+                <a href="staff.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-identification-badge text-xl"></i>
+                    <span class="font-medium text-sm">Staff Directory</span>
+                </a>
+                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-money text-xl"></i>
+                    <span class="font-medium text-sm">Payroll Engine</span>
                 </a>
             </div>
 
             <div>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Intelligence</p>
-                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
-                    <i class="ph ph-chart-line-up text-xl group-hover:text-indigo-400"></i>
-                    <span class="text-sm font-semibold">Analytics & Reports</span>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Government</p>
+                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-bank text-xl"></i>
+                    <span class="font-medium text-sm">Government Accounts</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Intelligence</p>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-chart-line text-xl"></i>
+                    <span class="font-medium text-sm">Analytics & Reports</span>
                 </a>
             </div>
         </div>
 
-        <div class="p-6 border-t border-slate-800">
-            <div class="bg-slate-800/40 p-4 rounded-2xl flex items-center space-x-3 mb-4 cursor-pointer hover:bg-slate-800 transition">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">TK</div>
-                <div class="overflow-hidden flex-1">
-                    <p class="text-xs font-bold text-white truncate">Tony Ken</p>
-                    <p class="text-[10px] text-slate-500 truncate">Senior Administrator</p>
-                </div>
-            </div>
-            <a href="index.html" onclick="showToast('Session Terminated', 'Logging out safely.', 'ph-sign-out')" class="flex items-center justify-center space-x-2 w-full py-2.5 rounded-xl hover:bg-red-500/10 text-red-400/80 hover:text-red-400 transition text-sm font-bold interactive-press">
-                <i class="ph ph-sign-out text-lg"></i>
-                <span>Sign Out</span>
+        <div class="p-4 border-t border-slate-800 bg-[#0B0F19]">
+            <a href="login.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-500 font-medium interactive-press">
+                <i class="ph ph-sign-out text-xl"></i>
+                <span class="text-sm">Sign Out</span>
             </a>
         </div>
     </aside>
@@ -536,11 +550,11 @@
             const backdrop = document.getElementById("mobileBackdrop");
             
             if (sidebar.style.transform === "translateX(0px)" || sidebar.style.transform === "translateX(0)") {
-                sidebar.style.transform = "translateX(-100%)";
-                backdrop.classList.add("hidden");
+                closeMobileMenu();
             } else {
                 sidebar.style.transform = "translateX(0)";
                 backdrop.classList.remove("hidden");
+                setTimeout(() => backdrop.classList.remove("opacity-0"), 10);
             }
         }
 
@@ -548,10 +562,9 @@
             const sidebar = document.getElementById("mobileSidebar");
             const backdrop = document.getElementById("mobileBackdrop");
             
-            setTimeout(() => {
-                sidebar.style.transform = "translateX(-100%)";
-                backdrop.classList.add("hidden");
-            }, 100);
+            sidebar.style.transform = "translateX(-100%)";
+            backdrop.classList.add("opacity-0");
+            setTimeout(() => backdrop.classList.add("hidden"), 300);
         }
 
         document.getElementById("mobileBackdrop")?.addEventListener("click", closeMobileMenu);
