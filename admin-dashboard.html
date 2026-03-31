@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Zambia - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .interactive-press:active { transform: scale(0.97); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05); }
+        .animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f1f5f9; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .bg-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-slate-800 bg-slate-50" onclick="closeAllDropdowns(event)">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-40 flex items-center justify-between px-4 shadow-sm">
+        <div class="flex items-center space-x-2">
+            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg">Z</div>
+            <span class="text-sm font-bold text-slate-800">BOZ Admin</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="relative p-2">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Backdrop -->
+    <div id="mobileBackdrop" class="md:hidden fixed inset-0 bg-black/50 z-30 hidden transition-opacity duration-300"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside id="mobileSidebar" class="md:hidden fixed left-0 top-0 w-64 h-screen bg-slate-900 text-slate-300 flex flex-col z-40 shadow-xl overflow-y-auto pt-20" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
+            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold">Z</div>
+            <span class="text-xl font-bold tracking-wide">BOZ Admin</span>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <a href="admin-dashboard.html" class="nav-link nav-link-active flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 transition interactive-press">
+                <i class="ph-fill ph-squares-four text-xl"></i>
+                <span class="text-sm font-bold">Dashboard</span>
+            </a>
+            <a href="service-channels.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-sliders text-xl"></i>
+                <span class="text-sm font-semibold">Channels</span>
+            </a>
+            <a href="users.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-users text-xl"></i>
+                <span class="text-sm font-semibold">Users</span>
+            </a>
+            <a href="analytics.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-chart-line-up text-xl"></i>
+                <span class="text-sm font-semibold">Analytics</span>
+            </a>
+        </nav>
+
+        <div class="p-4 mt-auto border-t border-slate-800">
+            <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-900/20 hover:text-red-400 transition text-slate-400">
+                <i class="ph ph-sign-out text-xl"></i>
+                <span class="font-medium">Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <aside class="w-64 bg-[#0B0F19] text-slate-400 flex flex-col hidden md:flex z-20 border-r border-slate-800 relative shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-[#0B0F19] -z-10"></div>
+        
+        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-green-500/30 text-white border border-white/20">
+                <i class="ph ph-bank text-xl"></i>
+            </div>
+            <div>
+                <span class="text-lg font-extrabold tracking-wide block leading-none text-white">BOZ</span>
+                <span class="text-[10px] text-emerald-400 font-mono tracking-widest uppercase font-semibold">Admin Portal</span>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-6 px-4 space-y-8">
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Dashboard</p>
+                <a href="admin-dashboard.html" class="nav-link active-nav flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
+                    <i class="ph ph-squares-four text-xl"></i>
+                    <span class="text-sm">Overview</span>
+                </a>
+                  <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
+                    <i class="ph ph-sliders text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Service Channels</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Banking Core</p>
+                <a href="users.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-users text-xl"></i>
+                    <span class="font-medium text-sm">User Accounts</span>
+                </a>
+                <a href="loans.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-hand-coins text-xl"></i>
+                    <span class="font-medium text-sm">Loan Book</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Internal Operations</p>
+                <a href="staff.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-identification-badge text-xl"></i>
+                    <span class="font-medium text-sm">Staff Directory</span>
+                </a>
+                <a href="payroll.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-money text-xl"></i>
+                    <span class="font-medium text-sm">Payroll Engine</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Government</p>
+                <a href="government-accounts.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-bank text-xl"></i>
+                    <span class="font-medium text-sm">Government Accounts</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Intelligence</p>
+                <a href="analytics.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                    <i class="ph ph-chart-line text-xl"></i>
+                    <span class="font-medium text-sm">Analytics & Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-[#0B0F19]">
+            <a href="#" onclick="showToast('Logging out...', 'Session terminated.', 'ph-sign-out', 'text-red-400')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-500 font-medium interactive-press">
+                <i class="ph ph-sign-out text-xl"></i>
+                <span class="text-sm">Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto relative md:pt-0 pt-16 pb-20 md:pb-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNCkiLz48L3N2Zz4=')]" >
+        
+        <header class="bg-glass border-b border-slate-200/80 px-8 py-5 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">System Overview</h2>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Live platform monitoring and configuration.</p>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="relative">
+                    <button id="notifBtn" onclick="toggleNotifications(event)" class="text-slate-500 hover:text-indigo-600 transition relative p-2.5 bg-white rounded-full shadow-sm border border-slate-200 interactive-press">
+                        <i class="ph ph-bell text-xl font-bold"></i>
+                        <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-amber-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                        <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                            <h3 class="font-bold text-slate-800 text-sm">System Alerts</h3>
+                            <button class="text-xs text-indigo-600 font-bold hover:text-indigo-800">Dismiss all</button>
+                        </div>
+                        <div class="max-h-72 overflow-y-auto">
+                            <div class="px-4 py-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition">
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0"><i class="ph ph-warning font-bold"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">High Latency Detected</p>
+                                        <p class="text-xs text-slate-500 font-medium leading-snug mt-0.5">M-PESA Gateway response > 2000ms.</p>
+                                        <p class="text-[10px] text-slate-400 mt-1 font-bold">10 mins ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative border-l border-slate-200 pl-6">
+                    <div id="profileBtn" onclick="toggleProfile(event)" class="flex items-center space-x-3 cursor-pointer group interactive-press bg-white border border-slate-200 pl-2 pr-4 py-1.5 rounded-full shadow-sm hover:border-indigo-300 transition">
+                        <img src="https://ui-avatars.com/api/?name=Super+Admin&background=4f46e5&color=fff&bold=true" alt="Admin" class="w-8 h-8 rounded-full shadow-sm">
+                        <div class="hidden md:block text-left">
+                            <p class="text-xs font-bold text-slate-700 leading-tight">Sarah Jenkins</p>
+                            <p class="text-[10px] text-slate-500 font-medium">Head of Ops</p>
+                        </div>
+                        <i class="ph ph-caret-down text-slate-400 font-bold group-hover:text-indigo-500 transition"></i>
+                    </div>
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                        <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Super+Admin&background=4f46e5&color=fff&bold=true" class="w-10 h-10 rounded-full">
+                            <div>
+                                <p class="text-sm font-bold text-slate-800">Sarah Jenkins</p>
+                                <p class="text-xs text-slate-500">sarah@nexus.com</p>
+                            </div>
+                        </div>
+                        <div class="py-2">
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition">
+                                <i class="ph ph-user-circle text-lg"></i> My Profile
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition">
+                                <i class="ph ph-shield-check text-lg"></i> Security Settings
+                            </a>
+                            <div class="h-px bg-slate-100 my-1"></div>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
+                                <i class="ph ph-sign-out text-lg"></i> Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-[1600px] mx-auto w-full pb-24">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 opacity-0 animate-fade-in-up">
+                <div onclick="openDetailsModal('volume')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="flex justify-between items-start mb-4 relative">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Gross Volume (24h)</p>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="ph ph-chart-line-up text-xl font-bold"></i></div>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">KES 45.2M</h3>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md flex items-center gap-1"><i class="ph ph-trend-up"></i> 12.5%</span>
+                        <span class="text-[10px] text-slate-400 font-semibold group-hover:text-indigo-500 transition flex items-center gap-1">View details <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+                
+                <div onclick="openDetailsModal('vcards')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-100">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="flex justify-between items-start mb-4 relative">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active V-Cards</p>
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><i class="ph ph-credit-card text-xl font-bold"></i></div>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">1,204</h3>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> API Online</span>
+                        <span class="text-[10px] text-slate-400 font-semibold group-hover:text-purple-500 transition flex items-center gap-1">Issuing logs <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+
+                <div onclick="openDetailsModal('pending_salaries')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-200">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="flex justify-between items-start mb-4 relative">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Pending Payroll</p>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="ph ph-money text-xl font-bold"></i></div>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">3 Batches</h3>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Auth Required</span>
+                        <span class="text-[10px] text-slate-400 font-semibold group-hover:text-blue-500 transition flex items-center gap-1">Review <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+
+                <div onclick="openDetailsModal('failed_transfers')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-300">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-rose-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="flex justify-between items-start mb-4 relative">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Failed Transfers</p>
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="ph ph-warning-octagon text-xl font-bold"></i></div>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">12</h3>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md">Check Gateway Logs</span>
+                        <span class="text-[10px] text-slate-400 font-semibold group-hover:text-rose-500 transition flex items-center gap-1">Errors <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6 mb-8 opacity-0 animate-fade-in-up delay-300">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Platform Transaction Volume</h3>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Total volume moved across all gateways (KES)</p>
+                    </div>
+                    <div class="bg-slate-100 p-1 rounded-lg flex text-sm font-semibold">
+                        <button class="px-4 py-1.5 bg-white text-indigo-600 rounded shadow-sm">7D</button>
+                        <button class="px-4 py-1.5 text-slate-500 hover:text-slate-800">30D</button>
+                        <button class="px-4 py-1.5 text-slate-500 hover:text-slate-800">1Y</button>
+                    </div>
+                </div>
+                <div class="relative h-[300px] w-full">
+                    <canvas id="adminVolumeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 opacity-0 animate-fade-in-up delay-400">
+                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                        <h3 class="font-bold text-slate-800 text-lg">System Configuration</h3>
+                        <button class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition">View All</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white shadow-sm text-indigo-600 rounded-full flex items-center justify-center border border-slate-100"><i class="ph ph-credit-card text-xl font-bold"></i></div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Virtual Card API</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-0.5">Stripe Issuing Engine</p>
+                                </div>
+                            </div>
+                            <button onclick="openConfigModal('Virtual Card API', 'Manage Stripe Webhooks & Keys')" class="text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-blue-200 transition">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white shadow-sm text-blue-600 rounded-full flex items-center justify-center border border-slate-100"><i class="ph ph-download-simple text-xl font-bold"></i></div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">Deposit Methods</p>
+                                    <p class="text-xs text-slate-500 font-medium mt-0.5">M-PESA, Visa/Mastercard</p>
+                                </div>
+                            </div>
+                            <button onclick="openConfigModal('Deposit Gateways', 'Configure Paybill & Cards')" class="text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                        <h3 class="font-bold text-slate-800 text-lg">Corporate Salary Disbursement</h3>
+                    </div>
+                    <div class="border border-slate-200 rounded-xl p-5 bg-gradient-to-r from-slate-50 to-white shadow-sm">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="ph ph-file-csv text-2xl text-emerald-600"></i>
+                            <h4 class="font-bold text-slate-800 text-md">Batch Engine</h4>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-5 font-medium pl-9">Process bulk employee payments via CSV upload. Auto-routes to internal and external banks.</p>
+                        <input type="file" id="csvUpload" accept=".csv" class="hidden" onchange="processSalaryUpload(event)">
+                        <button onclick="document.getElementById('csvUpload').click()" id="uploadBtn" class="w-full py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition flex justify-center items-center gap-2 interactive-press shadow-md">
+                            <span id="uploadBtnText">Upload Salary Batch (.csv)</span>
+                            <i id="uploadSpinner" class="ph ph-spinner-gap animate-spin hidden ml-2 text-xl"></i>
+                        </button>
+                        <p class="text-center text-xs text-slate-400 mt-4 font-medium"><a href="payroll.html" class="text-indigo-600 hover:underline">Go to full Payroll Engine</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="masterLogs" class="bg-white border border-slate-200/70 rounded-2xl shadow-sm overflow-hidden opacity-0 animate-fade-in-up delay-500 scroll-mt-24">
+                <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/50">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                        <h3 class="font-bold text-slate-800 text-xl">Master Auditing Logs</h3>
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <div class="relative flex-1 md:w-64">
+                                <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-lg"></i>
+                                <input type="text" placeholder="Search Trx ID, User..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                            <button class="px-4 py-2 border border-slate-300 bg-white rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 shadow-sm interactive-press shrink-0"><i class="ph ph-download-simple text-lg"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="flex space-x-6">
+                        <button onclick="switchLogTab('transfers')" id="tab-transfers" class="text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-sm uppercase tracking-wide">Fund Transfers</button>
+                        <button onclick="switchLogTab('deposits')" id="tab-deposits" class="text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-sm uppercase tracking-wide">Add Money</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white text-slate-500 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Trx ID</th>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Date</th>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">User</th>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Details</th>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Status</th>
+                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px] text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masterLogsBody" class="divide-y divide-slate-50 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="detailsModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-3xl p-0 max-w-2xl w-full mx-4 shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[80vh]" id="detailsModalContent">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-3xl">
+                <div>
+                    <h3 id="detailsModalTitle" class="text-xl font-bold text-slate-800">Details</h3>
+                    <p id="detailsModalSubtitle" class="text-xs text-slate-500 font-medium mt-1">Detailed breakdown of the selected metric.</p>
+                </div>
+                <button onclick="closeDetailsModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition interactive-press"><i class="ph ph-x font-bold"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <table class="w-full text-left text-sm">
+                    <thead id="detailsModalThead" class="text-slate-500 border-b border-slate-100 font-bold uppercase text-[10px] tracking-wider">
+                    </thead>
+                    <tbody id="detailsModalTbody" class="divide-y divide-slate-50">
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-3xl flex justify-end">
+                <button onclick="closeDetailsModal()" class="px-6 py-2 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition interactive-press">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="configModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all scale-95 opacity-0" id="configModalContent">
+            <h3 id="modalTitle" class="text-xl font-bold text-slate-800 mb-1">Configuration</h3>
+            <p id="modalSubtitle" class="text-sm text-slate-500 mb-6 font-medium">Manage gateway settings.</p>
+            <form id="configForm" onsubmit="saveAdminConfig(event)" class="space-y-5">
+                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                    <span class="text-sm font-bold text-slate-700">Module Status</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Production API Key</label>
+                    <input type="password" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-sm font-bold bg-slate-50 focus:bg-white transition" value="sk_live_1234567890abcdef">
+                </div>
+                <div class="flex space-x-3 pt-4 border-t border-slate-100 mt-6">
+                    <button type="button" onclick="closeAdminModal()" class="w-1/3 py-3 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition interactive-press">Cancel</button>
+                    <button type="submit" class="w-2/3 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/30 interactive-press flex justify-center items-center">
+                        <span id="saveConfigBtnText">Save Changes</span>
+                        <i id="saveConfigSpinner" class="ph ph-spinner-gap animate-spin hidden ml-2 text-xl"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-50 border border-slate-700">
+        <i id="toastIcon" class="ph ph-check-circle text-emerald-400 text-2xl font-fill"></i>
+        <div>
+            <h4 id="toastTitle" class="font-bold tracking-wide text-sm">Success</h4>
+            <p id="toastMessage" class="text-slate-400 text-xs font-medium mt-0.5">Action completed.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DYNAMIC MODAL FOR TOP CARDS ---
+        const popupData = {
+            volume: {
+                title: "Volume Breakdown (24h)", sub: "Top transaction gateways by volume.",
+                headers: ["Gateway", "Tx Count", "Status", "Volume (KES)"],
+                rows: [
+                    ["M-PESA Paybill", "12,450", "<span class='text-emerald-500 font-bold'>Optimal</span>", "28.5M"],
+                    ["Stripe Cards", "3,102", "<span class='text-emerald-500 font-bold'>Optimal</span>", "10.2M"],
+                    ["EFT Transfers", "45", "<span class='text-amber-500 font-bold'>Delayed</span>", "6.5M"]
+                ]
+            },
+            vcards: {
+                title: "Active Virtual Cards", sub: "Recently issued and activated cards.",
+                headers: ["User", "Card Mask", "Gateway", "Status"],
+                rows: [
+                    ["John Doe", "4242 **** 1234", "Stripe", "<span class='px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md text-xs font-bold'>Active</span>"],
+                    ["Alice Smith", "4242 **** 8891", "Stripe", "<span class='px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md text-xs font-bold'>Active</span>"],
+                    ["TechCorp Biz", "5511 **** 0001", "Mastercard API", "<span class='px-2 py-1 bg-amber-50 text-amber-600 rounded-md text-xs font-bold'>Frozen</span>"]
+                ]
+            },
+            pending_salaries: {
+                title: "Pending Salary Batches", sub: "Awaiting admin authorization for disbursement.",
+                headers: ["Batch ID", "Company", "Employees", "Total Amount", "Action"],
+                rows: [
+                    ["B-9912", "Acme Corp", "45", "KES 2.4M", "<button onclick='showToast(\"Authorized\", \"Batch B-9912 is processing.\")' class='text-indigo-600 font-bold text-xs hover:underline'>Authorize</button>"],
+                    ["B-9913", "Global Tech", "120", "KES 8.1M", "<button onclick='showToast(\"Authorized\", \"Batch B-9913 is processing.\")' class='text-indigo-600 font-bold text-xs hover:underline'>Authorize</button>"],
+                    ["B-9914", "Startup Inc", "12", "KES 600K", "<button onclick='showToast(\"Authorized\", \"Batch B-9914 is processing.\")' class='text-indigo-600 font-bold text-xs hover:underline'>Authorize</button>"]
+                ]
+            },
+            failed_transfers: {
+                title: "Failed Transactions", sub: "Recent failures requiring investigation.",
+                headers: ["Trx ID", "User", "Error Reason", "Amount"],
+                rows: [
+                    ["TRX-Err1", "Jane Mutua", "Gateway Timeout (M-PESA)", "KES 5,000"],
+                    ["TRX-Err2", "Mike Johnson", "Insufficient Core Balance", "KES 150,000"],
+                    ["TRX-Err3", "System", "API Key Invalid (Stripe)", "KES 0.00"]
+                ]
+            }
+        };
+
+        function openDetailsModal(type) {
+            const data = popupData[type];
+            document.getElementById('detailsModalTitle').innerText = data.title;
+            document.getElementById('detailsModalSubtitle').innerText = data.sub;
+
+            const thead = document.getElementById('detailsModalThead');
+            thead.innerHTML = `<tr>${data.headers.map(h => `<th class="py-3 px-4">${h}</th>`).join('')}</tr>`;
+
+            const tbody = document.getElementById('detailsModalTbody');
+            tbody.innerHTML = data.rows.map(row => 
+                `<tr class="hover:bg-slate-50 transition"><td class="py-3 px-4 font-bold text-slate-800">${row[0]}</td>
+                <td class="py-3 px-4 text-slate-600">${row[1]}</td>
+                <td class="py-3 px-4">${row[2]}</td>
+                <td class="py-3 px-4 font-bold">${row[3]}</td></tr>`
+            ).join('');
+
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // --- 2. ADMIN CHART & MISC LOGIC ---
+        document.addEventListener("DOMContentLoaded", function() {
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            const ctx = document.getElementById('adminVolumeChart').getContext('2d');
+            const volumeGradient = ctx.createLinearGradient(0, 0, 0, 300);
+            volumeGradient.addColorStop(0, 'rgba(79, 70, 229, 0.2)'); 
+            volumeGradient.addColorStop(1, 'rgba(79, 70, 229, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Volume (KES)',
+                        data: [32000000, 38000000, 29000000, 41000000, 52000000, 48000000, 45200000],
+                        borderColor: '#4f46e5', backgroundColor: volumeGradient,
+                        borderWidth: 3, pointBackgroundColor: '#ffffff', pointBorderColor: '#4f46e5',
+                        pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, fill: true, tension: 0.4 
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#f1f5f9', drawBorder: false }, ticks: { font: { size: 11, weight: '600' }, color: '#94a3b8', callback: val => (val/1000000) + 'M' } },
+                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { size: 12, weight: '600' }, color: '#64748b' } }
+                    },
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false }
+                }
+            });
+            
+            renderTable('transfers');
+        });
+
+        // Original Log Data
+        const logData = {
+            transfers: [{ id: "TRX-88291A", date: "Today, 10:14 AM", user: "John Doe (4589)", details: "To: Equity Bank", status: "Completed", amount: "KES 15,000.00" }],
+            deposits: [{ id: "DEP-99110X", date: "Today, 11:05 AM", user: "Mike Johnson", details: "M-PESA Paybill", status: "Completed", amount: "KES 50,000.00" }]
+        };
+
+        function renderTable(type) {
+            const tbody = document.getElementById('masterLogsBody');
+            tbody.innerHTML = '';
+            const data = logData[type] || logData['transfers'];
+            data.forEach(log => {
+                const badge = log.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100';
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr class="hover:bg-slate-50/70 transition"><td class="px-6 py-4 font-mono text-xs font-bold text-indigo-600">${log.id}</td>
+                    <td class="px-6 py-4 text-slate-500 font-medium text-xs">${log.date}</td><td class="px-6 py-4 font-bold">${log.user}</td>
+                    <td class="px-6 py-4 text-sm">${log.details}</td><td class="px-6 py-4"><span class="px-2 py-1 ${badge} rounded text-[10px] uppercase font-bold border">${log.status}</span></td>
+                    <td class="px-6 py-4 font-extrabold text-right">${log.amount}</td></tr>
+                `);
+            });
+        }
+        function switchLogTab(tab) {
+            ['transfers', 'deposits'].forEach(t => {
+                document.getElementById(`tab-${t}`).className = (t === tab) ? "text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-sm uppercase tracking-wide" : "text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-sm uppercase tracking-wide";
+            });
+            renderTable(tab);
+        }
+
+        // Dropdowns & Modals
+        function toggleNotifications(e) { e.stopPropagation(); toggleDropdown(document.getElementById('notifDropdown')); }
+        function toggleProfile(e) { e.stopPropagation(); toggleDropdown(document.getElementById('profileDropdown')); }
+        function toggleDropdown(el) { el.classList.contains('hidden') ? (el.classList.remove('hidden'), setTimeout(() => el.classList.remove('opacity-0', 'scale-95'), 10)) : (el.classList.add('opacity-0', 'scale-95'), setTimeout(() => el.classList.add('hidden'), 200)); }
+        
+        function closeAllDropdowns(e) { 
+            const notif = document.getElementById('notifDropdown'); const prof = document.getElementById('profileDropdown');
+            if (!notif.contains(e.target) && !document.getElementById('notifBtn').contains(e.target)) { notif.classList.add('opacity-0', 'scale-95'); setTimeout(() => notif.classList.add('hidden'), 200); }
+            if (!prof.contains(e.target) && !document.getElementById('profileBtn').contains(e.target)) { prof.classList.add('opacity-0', 'scale-95'); setTimeout(() => prof.classList.add('hidden'), 200); }
+        }
+
+        function openConfigModal(title, sub) { document.getElementById('modalTitle').innerText = title; document.getElementById('modalSubtitle').innerText = sub; const m = document.getElementById('configModal'), c = document.getElementById('configModalContent'); m.classList.remove('hidden'); setTimeout(() => c.classList.remove('scale-95', 'opacity-0'), 10); }
+        function closeAdminModal() { const m = document.getElementById('configModal'), c = document.getElementById('configModalContent'); c.classList.add('scale-95', 'opacity-0'); setTimeout(() => m.classList.add('hidden'), 200); }
+        function saveAdminConfig(e) { e.preventDefault(); showToast('Saved', 'Configuration applied.'); closeAdminModal(); }
+
+        function processSalaryUpload(e) {
+            if(!e.target.files[0]) return;
+            document.getElementById('uploadSpinner').classList.remove('hidden');
+            setTimeout(() => { document.getElementById('uploadSpinner').classList.add('hidden'); e.target.value = ''; showToast('Batch Queued', 'Pending authorization. Go to Payroll Engine to view.'); }, 1500);
+        }
+
+        function showToast(title, msg, icon='ph-check-circle', color='text-emerald-400') {
+            const t = document.getElementById('toast');
+            document.getElementById('toastTitle').innerText = title; document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').className = `ph ${icon} ${color} text-2xl font-fill`;
+            t.classList.remove('hidden'); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => { t.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => t.classList.add('hidden'), 300); }, 3500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Zambia - Account Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="banking-utils.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .interactive-press:active { transform: scale(0.97); }
+        .tab-button { padding: 0.75rem 1.5rem; border-bottom: 3px solid transparent; font-weight: 600; transition: all 0.3s; }
+        .tab-button.active { border-bottom-color: #3b82f6; color: #3b82f6; }
+        .toggle-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: 0.4s; border-radius: 34px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background-color: #10b981; }
+        input:checked + .toggle-slider:before { transform: translateX(26px); }
+        .modal-overlay { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-40 flex items-center justify-between px-4 shadow-sm">
+        <div class="flex items-center space-x-2">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white">Z</div>
+            <span class="text-sm font-bold text-slate-800">Bank of Zambia</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="relative p-2">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Backdrop -->
+    <div id="mobileBackdrop" class="md:hidden fixed inset-0 bg-black/50 z-30 hidden transition-opacity duration-300"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside id="mobileSidebar" class="md:hidden fixed left-0 top-0 w-64 h-screen bg-slate-900 text-slate-300 flex flex-col z-40 shadow-xl overflow-y-auto pt-20" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold">Z</div>
+            <span class="text-xl font-bold tracking-wide">Bank of Zambia</span>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <a href="admin-dashboard.html" class="nav-link block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-squares-four mr-2"></i>Dashboard
+            </a>
+            <a href="service-channels.html" class="nav-link block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-sliders mr-2"></i>Service Channels
+            </a>
+            <a href="calendar.html" class="nav-link block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-calendar mr-2"></i>Calendar
+            </a>
+            <a href="settings.html" class="nav-link nav-link-active block px-4 py-3 rounded-lg bg-green-600 transition font-semibold">
+                <i class="ph ph-gear mr-2"></i>Settings
+            </a>
+        </nav>
+
+        <div class="p-4 mt-auto border-t border-slate-800">
+            <a href="#" onclick="handleLogout(event)" class="block px-4 py-3 rounded-lg hover:bg-red-900/20 hover:text-red-400 transition text-slate-400">
+                <i class="ph ph-sign-out mr-2"></i>Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Sidebar -->
+    <div class="fixed top-0 left-0 w-64 h-screen bg-slate-900 text-white p-6 hidden md:block z-10">
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="bg-gradient-to-tr from-blue-600 to-blue-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold">N</div>
+            <span class="text-xl font-bold">Nexus Bank</span>
+        </div>
+        <nav class="space-y-2">
+            <a href="admin-dashboard.html" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-squares-four mr-2"></i>Dashboard
+            </a>
+            <a href="service-channels.html" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-sliders mr-2"></i>Service Channels
+            </a>
+            <a href="calendar.html" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition">
+                <i class="ph ph-calendar mr-2"></i>Calendar
+            </a>
+            <a href="settings.html" class="block px-4 py-3 rounded-lg bg-blue-600 transition font-semibold">
+                <i class="ph ph-gear mr-2"></i>Settings
+            </a>
+            <a href="index.html" class="block px-4 py-3 rounded-lg hover:bg-red-900/20 hover:text-red-400 transition text-slate-400 mt-6">
+                <i class="ph ph-sign-out mr-2"></i>Sign Out
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 pt-16 pb-20 md:pt-0 md:pb-0">
+        <!-- Header -->
+        <div class="bg-white border-b border-slate-200 sticky top-0 z-20">
+            <div class="px-6 py-4">
+                <h1 class="text-2xl font-bold text-slate-900">Account Settings</h1>
+                <p class="text-sm text-slate-500 mt-1">Manage your banking preferences and security settings</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white border-b border-slate-200 px-6">
+            <div class="flex overflow-x-auto">
+                <button onclick="switchTab('currency')" class="tab-button active transition" id="tab-currency">
+                    <i class="ph ph-currency-circle-dollar mr-2"></i>Currency
+                </button>
+                <button onclick="switchTab('security')" class="tab-button transition" id="tab-security">
+                    <i class="ph ph-shield-check mr-2"></i>Security
+                </button>
+                <button onclick="switchTab('limits')" class="tab-button transition" id="tab-limits">
+                    <i class="ph ph-limit-icon mr-2"></i>Limits
+                </button>
+                <button onclick="switchTab('notifications')" class="tab-button transition" id="tab-notifications">
+                    <i class="ph ph-bell mr-2"></i>Notifications
+                </button>
+                <button onclick="switchTab('analytics')" class="tab-button transition" id="tab-analytics">
+                    <i class="ph ph-chart-line mr-2"></i>Analytics
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+            <!-- Currency Settings -->
+            <div id="currency-tab" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Default Currency Selection -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="ph ph-currency-circle-dollar text-2xl text-blue-600"></i>
+                            Default Currency
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">Select your preferred currency for all transactions</p>
+                        
+                        <select id="defaultCurrencySelect" onchange="changeDefaultCurrency(this.value)" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4">
+                            <option value="">Select Currency...</option>
+                        </select>
+
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <p class="text-sm font-semibold text-blue-900" id="currentCurrencyDisplay">Current: USD</p>
+                        </div>
+                    </div>
+
+                    <!-- Currency Converter -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="ph ph-arrow-left-right text-2xl text-purple-600"></i>
+                            Quick Converter
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Amount</label>
+                                <input type="number" id="convertAmount" placeholder="Enter amount" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">From</label>
+                                    <select id="convertFrom" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">To</label>
+                                    <select id="convertTo" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button onclick="convertCurrency()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold interactive-press">
+                                Convert
+                            </button>
+
+                            <div id="conversionResult" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                <p class="text-sm text-emerald-900" id="conversionResultText"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supported Currencies -->
+                <div class="mt-6 bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Supported Currencies</h3>
+                    <div id="currenciesList" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <!-- Currencies will be listed here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div id="security-tab" class="tab-content hidden">
+                <div class="space-y-6">
+                    <!-- Two-Factor Authentication -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-blue-100 p-3 rounded-lg">
+                                    <i class="ph ph-shield-check text-2xl text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Two-Factor Authentication</h3>
+                                    <p class="text-sm text-slate-500 mt-1">Add an extra layer of security to your account</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="twoFactorToggle" onchange="updateSecuritySetting('twoFactor', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Biometric Authentication -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-purple-100 p-3 rounded-lg">
+                                    <i class="ph ph-fingerprint text-2xl text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Biometric Login</h3>
+                                    <p class="text-sm text-slate-500 mt-1">Use fingerprint or face recognition</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="biometricToggle" onchange="updateSecuritySetting('biometric', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Login Alerts -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-amber-100 p-3 rounded-lg">
+                                    <i class="ph ph-warning-circle text-2xl text-amber-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Login Alerts</h3>
+                                    <p class="text-sm text-slate-500 mt-1">Get notified of new login attempts</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="loginAlertsToggle" onchange="updateSecuritySetting('loginAlerts', this.checked)" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Unusual Activity Alerts -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-red-100 p-3 rounded-lg">
+                                    <i class="ph ph-siren text-2xl text-red-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">Unusual Activity Alert</h3>
+                                    <p class="text-sm text-slate-500 mt-1">Alert me of suspicious account activity</p>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="unusualActivityToggle" onchange="updateSecuritySetting('unusualActivityAlert', this.checked)" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Session Timeout -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Session Timeout</h3>
+                        <p class="text-sm text-slate-600 mb-4">Automatically log out after inactivity</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button onclick="setSessionTimeout(15)" class="px-4 py-2 border-2 border-slate-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition font-semibold text-sm">15 min</button>
+                            <button onclick="setSessionTimeout(30)" class="px-4 py-2 border-2 border-blue-500 rounded-lg text-blue-600 font-semibold text-sm bg-blue-50">30 min</button>
+                            <button onclick="setSessionTimeout(60)" class="px-4 py-2 border-2 border-slate-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition font-semibold text-sm">1 hour</button>
+                            <button onclick="setSessionTimeout(120)" class="px-4 py-2 border-2 border-slate-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition font-semibold text-sm">2 hours</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Limits -->
+            <div id="limits-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                    <h3 class="text-lg font-bold text-slate-900 mb-6">Set Transaction Limits</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Daily Transfer Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitDailyTransfer" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="50000">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Daily Withdrawal Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitDailyWithdrawal" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="30000">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Daily Payment Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitDailyPayments" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="25000">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Single Transaction Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitSingleTx" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="100000">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">International Transfer Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitIntlTransfer" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="500000">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Monthly Transfer Limit</label>
+                            <div class="flex items-center gap-2">
+                                <span class="text-slate-600">$</span>
+                                <input type="number" id="limitMonthlyTransfer" class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="500000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="saveLimits()" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold interactive-press">
+                        Save Limits
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div id="notifications-tab" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Notification Channels -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Notification Channels</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="ph ph-envelope text-2xl text-blue-600"></i>
+                                    <span class="font-semibold text-slate-900">Email</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifEmail" onchange="updateNotificationPreference('email', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="ph ph-phone text-2xl text-green-600"></i>
+                                    <span class="font-semibold text-slate-900">SMS</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifSms" onchange="updateNotificationPreference('sms', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="ph ph-bell text-2xl text-purple-600"></i>
+                                    <span class="font-semibold text-slate-900">Push</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifPush" onchange="updateNotificationPreference('push', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="ph ph-chat-circle text-2xl text-amber-600"></i>
+                                    <span class="font-semibold text-slate-900">In-App</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifInApp" onchange="updateNotificationPreference('inApp', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Types -->
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Notification Types</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-slate-900">Transactions</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifTransactions" onchange="updateNotificationPreference('transactions', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-slate-900">Security Alerts</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifSecurity" onchange="updateNotificationPreference('security', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-slate-900">Promotions</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifPromotions" onchange="updateNotificationPreference('promotions', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-slate-900">System Updates</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notifUpdates" onchange="updateNotificationPreference('systemUpdates', this.checked)" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Analytics -->
+            <div id="analytics-tab" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-slate-500 text-sm font-medium">Total Transactions</p>
+                                <p class="text-3xl font-bold text-slate-900 mt-2" id="analyticsTotalTx">0</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <i class="ph ph-swap text-2xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-slate-500 text-sm font-medium">Total Spent</p>
+                                <p class="text-3xl font-bold text-slate-900 mt-2" id="analyticsTotalSpent">$0</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-lg">
+                                <i class="ph ph-money text-2xl text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-slate-500 text-sm font-medium">Average Transaction</p>
+                                <p class="text-3xl font-bold text-slate-900 mt-2" id="analyticsAvgTx">$0</p>
+                            </div>
+                            <div class="bg-emerald-100 p-3 rounded-lg">
+                                <i class="ph ph-chart-line text-2xl text-emerald-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Account Summary</h3>
+                        <div id="analyticsSummary" class="space-y-3 text-sm">
+                            <!-- Summary will be rendered here -->
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg border border-slate-200 p-6 card-hover">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4">Spending by Category</h3>
+                        <div id="spendingReport" class="space-y-2 text-sm">
+                            <!-- Spending report will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function initializeCurrencySettings() {
+            const select = document.getElementById('defaultCurrencySelect');
+            const convertFrom = document.getElementById('convertFrom');
+            const convertTo = document.getElementById('convertTo');
+            const currenciesList = document.getElementById('currenciesList');
+
+            currencyManager.supportedCurrencies.forEach(code => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = code;
+                select.appendChild(option.cloneNode(true));
+                convertFrom.appendChild(option.cloneNode(true));
+                convertTo.appendChild(option.cloneNode(true));
+
+                const currencyCard = document.createElement('div');
+                currencyCard.className = 'p-3 bg-slate-50 rounded-lg border border-slate-200 text-center hover:bg-blue-50 transition cursor-pointer';
+                currencyCard.innerHTML = `<p class="font-bold text-slate-900">${code}</p><p class="text-xs text-slate-500">Rate: ${currencyManager.exchangeRates[code].toFixed(2)}</p>`;
+                currencyCard.onclick = () => changeCurrency(code);
+                currenciesList.appendChild(currencyCard);
+            });
+
+            select.value = currencyManager.defaultCurrency;
+            document.getElementById('currentCurrencyDisplay').textContent = `Current: ${currencyManager.defaultCurrency}`;
+        }
+
+        function changeDefaultCurrency(currency) {
+            currencyManager.setDefaultCurrency(currency);
+            document.getElementById('currentCurrencyDisplay').textContent = `Current: ${currency}`;
+            showNotification('Default currency updated');
+        }
+
+        function changeCurrency(code) {
+            document.getElementById('defaultCurrencySelect').value = code;
+            changeDefaultCurrency(code);
+        }
+
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById('convertAmount').value);
+            const from = document.getElementById('convertFrom').value;
+            const to = document.getElementById('convertTo').value;
+
+            if (!amount || !from || !to) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const result = currencyManager.convertCurrency(amount, from, to);
+            document.getElementById('conversionResultText').textContent = `${amount} ${from} = ${result} ${to}`;
+            document.getElementById('conversionResult').classList.remove('hidden');
+        }
+
+        function initializeSecuritySettings() {
+            document.getElementById('twoFactorToggle').checked = securitySettings.settings.twoFactorEnabled;
+            document.getElementById('biometricToggle').checked = securitySettings.settings.biometricEnabled;
+            document.getElementById('loginAlertsToggle').checked = securitySettings.settings.loginAlerts;
+            document.getElementById('unusualActivityToggle').checked = securitySettings.settings.unusualActivityAlert;
+        }
+
+        function updateSecuritySetting(setting, value) {
+            if (setting === 'twoFactor') {
+                value ? securitySettings.enableTwoFactor() : securitySettings.disableTwoFactor();
+            } else if (setting === 'biometric') {
+                value ? securitySettings.enableBiometric() : (securitySettings.settings.biometricEnabled = false, securitySettings.saveSettings());
+            } else if (setting === 'loginAlerts') {
+                securitySettings.settings.loginAlerts = value;
+                securitySettings.saveSettings();
+            } else if (setting === 'unusualActivityAlert') {
+                securitySettings.settings.unusualActivityAlert = value;
+                securitySettings.saveSettings();
+            }
+            showNotification('Security setting updated');
+        }
+
+        function setSessionTimeout(minutes) {
+            securitySettings.setSessionTimeout(minutes);
+            document.querySelectorAll('#security-tab button').forEach(btn => btn.classList.remove('border-blue-500', 'text-blue-600', 'bg-blue-50'));
+            event.target.classList.add('border-blue-500', 'text-blue-600', 'bg-blue-50');
+            showNotification(`Session timeout set to ${minutes} minutes`);
+        }
+
+        function initializeLimits() {
+            document.getElementById('limitDailyTransfer').value = transactionLimits.limits.daily_transfer;
+            document.getElementById('limitDailyWithdrawal').value = transactionLimits.limits.daily_withdrawal;
+            document.getElementById('limitDailyPayments').value = transactionLimits.limits.daily_payments;
+            document.getElementById('limitSingleTx').value = transactionLimits.limits.single_transaction;
+            document.getElementById('limitIntlTransfer').value = transactionLimits.limits.international_transfer;
+            document.getElementById('limitMonthlyTransfer').value = transactionLimits.limits.monthly_transfer;
+        }
+
+        function saveLimits() {
+            transactionLimits.updateLimit('daily_transfer', parseFloat(document.getElementById('limitDailyTransfer').value));
+            transactionLimits.updateLimit('daily_withdrawal', parseFloat(document.getElementById('limitDailyWithdrawal').value));
+            transactionLimits.updateLimit('daily_payments', parseFloat(document.getElementById('limitDailyPayments').value));
+            transactionLimits.updateLimit('single_transaction', parseFloat(document.getElementById('limitSingleTx').value));
+            transactionLimits.updateLimit('international_transfer', parseFloat(document.getElementById('limitIntlTransfer').value));
+            transactionLimits.updateLimit('monthly_transfer', parseFloat(document.getElementById('limitMonthlyTransfer').value));
+            showNotification('Transaction limits updated');
+        }
+
+        function initializeNotifications() {
+            document.getElementById('notifEmail').checked = notificationManager.preferences.email;
+            document.getElementById('notifSms').checked = notificationManager.preferences.sms;
+            document.getElementById('notifPush').checked = notificationManager.preferences.push;
+            document.getElementById('notifInApp').checked = notificationManager.preferences.inApp;
+            document.getElementById('notifTransactions').checked = notificationManager.preferences.transactions;
+            document.getElementById('notifSecurity').checked = notificationManager.preferences.security;
+            document.getElementById('notifPromotions').checked = notificationManager.preferences.promotions;
+            document.getElementById('notifUpdates').checked = notificationManager.preferences.systemUpdates;
+        }
+
+        function updateNotificationPreference(key, value) {
+            notificationManager.updatePreference(key, value);
+            showNotification('Notification preference updated');
+        }
+
+        function initializeAnalytics() {
+            const summary = analytics.getAccountSummary();
+            const spending = analytics.getSpendingReport();
+
+            document.getElementById('analyticsTotalTx').textContent = summary.totalTransactions;
+            document.getElementById('analyticsTotalSpent').textContent = currencyManager.formatCurrency(summary.totalSpent);
+            document.getElementById('analyticsAvgTx').textContent = currencyManager.formatCurrency(summary.averageTransaction);
+
+            const summaryHtml = `
+                <div><span class="text-slate-600">Total Spent:</span> <span class="font-bold text-slate-900">${currencyManager.formatCurrency(summary.totalSpent)}</span></div>
+                <div><span class="text-slate-600">Last Login:</span> <span class="font-bold text-slate-900">${summary.lastLogin ? new Date(summary.lastLogin).toLocaleString() : 'N/A'}</span></div>
+                <div><span class="text-slate-600">Total Logins:</span> <span class="font-bold text-slate-900">${summary.loginCount}</span></div>
+                <div><span class="text-slate-600">Devices:</span> <span class="font-bold text-slate-900">${summary.deviceCount}</span></div>
+            `;
+            document.getElementById('analyticsSummary').innerHTML = summaryHtml;
+
+            const spendingHtml = Object.entries(spending).map(([category, amount]) => `
+                <div class="flex justify-between items-center p-2 bg-slate-50 rounded">
+                    <span class="text-slate-600 capitalize">${category}:</span>
+                    <span class="font-bold text-slate-900">${currencyManager.formatCurrency(amount)}</span>
+                </div>
+            `).join('');
+            document.getElementById('spendingReport').innerHTML = spendingHtml || '<p class="text-slate-500">No spending data</p>';
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // ===== CHAT SUPPORT WIDGET =====
+        const settingsMessages = {
+            'currency': 'You can set your default currency for all transactions. Select from 14 supported currencies and we\'ll automatically convert amounts for you.',
+            'security': 'Enable 2FA, biometric authentication, device fingerprinting, and set session timeouts for enhanced security.',
+            'limits': 'Configure daily transfer, withdrawal, and payment limits to control your spending.',
+            'notifications': 'Customize how you receive alerts via email, SMS, push notifications, or in-app messages.',
+            'analytics': 'Track your spending patterns, transaction history, and account activity over time.',
+            'help': 'I can help you understand and configure all your account settings.',
+            'default': 'Hi! I\'m your settings assistant. I can help you manage currency, security, limits, notifications, and analytics.'
+        };
+
+        function toggleChat(e) {
+            if (e) e.stopPropagation();
+            const chatWindow = document.getElementById('chatWindow');
+            const supportIcon = document.getElementById('supportIcon');
+            if (chatWindow.classList.contains('hidden')) {
+                chatWindow.classList.remove('hidden');
+                supportIcon.classList.replace('ph-chat-teardrop-dots', 'ph-caret-down');
+                setTimeout(() => {
+                    chatWindow.classList.remove('opacity-0', 'scale-95');
+                    chatWindow.classList.add('opacity-100', 'scale-100');
+                    document.getElementById('chatInput')?.focus();
+                }, 10);
+            } else {
+                chatWindow.classList.remove('opacity-100', 'scale-100');
+                chatWindow.classList.add('opacity-0', 'scale-95');
+                supportIcon.classList.replace('ph-caret-down', 'ph-chat-teardrop-dots');
+                setTimeout(() => chatWindow.classList.add('hidden'), 200);
+            }
+        }
+
+        function handleChatSubmit(e) {
+            e.preventDefault();
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            if (!message) return;
+            appendUserMessage(message);
+            chatInput.value = '';
+            const msg = message.toLowerCase();
+            let response = settingsMessages['default'];
+            if (msg.includes('currency')) response = settingsMessages['currency'];
+            else if (msg.includes('security') || msg.includes('2fa')) response = settingsMessages['security'];
+            else if (msg.includes('limit')) response = settingsMessages['limits'];
+            else if (msg.includes('notif')) response = settingsMessages['notifications'];
+            else if (msg.includes('analytic') || msg.includes('spending')) response = settingsMessages['analytics'];
+            else if (msg.includes('help')) response = settingsMessages['help'];
+            setTimeout(() => appendBotMessage(response), 800);
+        }
+
+        function appendUserMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.insertAdjacentHTML('beforeend', `<div class="flex items-start gap-2 justify-end animate-fade-in"><div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-none shadow-sm text-sm max-w-[80%]">${text}</div></div>`);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function appendBotMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.insertAdjacentHTML('beforeend', `<div class="flex items-start gap-2 animate-fade-in"><div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"><i class="ph ph-robot text-sm"></i></div><div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-800 max-w-[80%]">${text}</div></div>`);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCurrencySettings();
+            initializeSecuritySettings();
+            initializeLimits();
+            initializeNotifications();
+            initializeAnalytics();
+            const supportBtn = document.getElementById('supportBtn');
+            const chatForm = document.getElementById('chatForm');
+            if (supportBtn) supportBtn.addEventListener('click', toggleChat);
+            if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
+        });
+    </script>
+
+    <!-- Chat Support Widget -->
+    <button id="supportBtn" class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-tr from-purple-600 to-purple-500 text-white rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center z-40 interactive-press border-2 border-white/20">
+        <i id="supportIcon" class="ph ph-chat-teardrop-dots text-3xl transition-transform"></i>
+    </button>
+
+    <div id="chatWindow" class="hidden fixed bottom-28 right-8 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 flex flex-col overflow-hidden transform transition-all opacity-0 scale-95 origin-bottom-right" style="height: 500px;">
+        <div class="bg-gradient-to-r from-purple-600 to-purple-500 p-4 flex justify-between items-center text-white shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <i class="ph ph-robot text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold leading-tight">Settings Support</h3>
+                    <p class="text-xs text-purple-100 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-lime-300"></span> Online</p>
+                </div>
+            </div>
+            <button onclick="toggleChat(event)" class="text-white/80 hover:text-white transition p-1 interactive-press">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4">
+            <div class="flex items-start gap-2 animate-fade-in">
+                <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                    <i class="ph ph-robot text-sm"></i>
+                </div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 max-w-[80%]">
+                    Hello! I'm your settings assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+        <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+            <form id="chatForm" class="flex items-center gap-2">
+                <input type="text" id="chatInput" autocomplete="off" placeholder="Ask about settings..." class="flex-1 px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-purple-600 outline-none">
+                <button type="submit" class="w-10 h-10 bg-purple-600 text-white rounded-xl flex items-center justify-center hover:bg-purple-700 transition interactive-press shrink-0">
+                    <i class="ph ph-paper-plane-right text-lg"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById("mobileSidebar");
+            const backdrop = document.getElementById("mobileBackdrop");
+            const hamburger = document.querySelector(".hamburger-icon");
+            
+            if (sidebar.style.transform === "translateX(0px)" || sidebar.style.transform === "translateX(0)") {
+                sidebar.style.transform = "translateX(-100%)";
+                backdrop.classList.add("hidden");
+                hamburger.style.transform = "rotate(0deg)";
+            } else {
+                sidebar.style.transform = "translateX(0)";
+                backdrop.classList.remove("hidden");
+                hamburger.style.transform = "rotate(90deg)";
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById("mobileSidebar");
+            const backdrop = document.getElementById("mobileBackdrop");
+            const hamburger = document.querySelector(".hamburger-icon");
+            
+            setTimeout(() => {
+                sidebar.style.transform = "translateX(-100%)";
+                backdrop.classList.add("hidden");
+                hamburger.style.transform = "rotate(0deg)";
+            }, 300);
+        }
+
+        // Close menu on backdrop click
+        document.getElementById("mobileBackdrop")?.addEventListener("click", closeMobileMenu);
+
+        // Close menu on nav link click
+        document.querySelectorAll("#mobileSidebar .nav-link").forEach(link => {
+            link.addEventListener("click", closeMobileMenu);
+        });
+    </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-20 z-20 flex items-center justify-around">
+        <a href="admin-dashboard.html" class="flex flex-col items-center justify-center py-2 px-4 text-gray-600 hover:text-green-600 transition-colors">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4m-4-4v4"></path>
+            </svg>
+            <span class="text-xs">Home</span>
+        </a>
+        <a href="transfers.html" class="flex flex-col items-center justify-center py-2 px-4 text-gray-600 hover:text-green-600 transition-colors">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <span class="text-xs">Send</span>
+        </a>
+        <a href="loans.html" class="flex flex-col items-center justify-center py-2 px-4 text-gray-600 hover:text-green-600 transition-colors">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-xs">Loans</span>
+        </a>
+        <a href="statements.html" class="flex flex-col items-center justify-center py-2 px-4 text-gray-600 hover:text-green-600 transition-colors">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span class="text-xs">Statements</span>
+        </a>
+        <button onclick="toggleMobileMenu()" class="flex flex-col items-center justify-center py-2 px-4 text-gray-600 hover:text-green-600 transition-colors">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <span class="text-xs">Menu</span>
+        </button>
+    </nav>
+</body>
+</html>

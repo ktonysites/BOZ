@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOZ | Government Accounts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        
+        /* Modern Glassmorphism & Depth */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #020617 100%); }
+
+        .interactive-press { transition: transform 0.1s; }
+        .interactive-press:active { transform: scale(0.97); }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-row { animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-animate { animation: fadeScale 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .modal-overlay { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Progress Bar */
+        .progress-bar-fill { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-[#f8fafc] text-slate-900" onclick="closeAllDropdowns(event)">
+
+    <aside class="w-72 sidebar-gradient text-slate-400 flex flex-col hidden lg:flex border-r border-slate-800 shadow-2xl relative z-20">
+        <div class="p-8 flex items-center space-x-3">
+            <div class="bg-indigo-500 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
+                <i class="ph-fill ph-bank text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-white font-extrabold tracking-tight text-xl">BOZ CORE</h1>
+                <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.2em]">Admin Portal</p>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-4 pb-8 space-y-6">
+            <div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Dashboard</p>
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
+                    <i class="ph ph-squares-four text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Overview</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Banking Core</p>
+                <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
+                    <i class="ph ph-sliders text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Service Channels</span>
+                </a>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
+                    <i class="ph ph-users text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">User Accounts</span>
+                </a>
+                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
+                    <i class="ph ph-hand-coins text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Loan Book</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Internal Operations</p>
+                <a href="calendar.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
+                    <i class="ph ph-calendar-blank text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold flex-1">Systems Calendar</span>
+                </a>
+                <a href="staff.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
+                    <i class="ph ph-identification-badge text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Staff Directory</span>
+                </a>
+                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
+                    <i class="ph ph-money text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Payroll Engine</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Government</p>
+                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm interactive-press">
+                    <i class="ph-fill ph-bank text-xl"></i>
+                    <span class="text-sm font-bold flex-1">Government Accounts</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Intelligence</p>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press">
+                    <i class="ph ph-chart-line-up text-xl group-hover:text-indigo-400"></i>
+                    <span class="text-sm font-semibold">Analytics & Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-slate-800">
+            <div class="bg-slate-800/40 p-4 rounded-2xl flex items-center space-x-3 mb-4 cursor-pointer hover:bg-slate-800 transition">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">TK</div>
+                <div class="overflow-hidden flex-1">
+                    <p class="text-xs font-bold text-white truncate">Tony Ken</p>
+                    <p class="text-[10px] text-slate-500 truncate">Senior Administrator</p>
+                </div>
+            </div>
+            <a href="index.html" onclick="showToast('Session Terminated', 'Logging out safely.', 'ph-sign-out')" class="flex items-center justify-center space-x-2 w-full py-2.5 rounded-xl hover:bg-red-500/10 text-red-400/80 hover:text-red-400 transition text-sm font-bold interactive-press">
+                <i class="ph ph-sign-out text-lg"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto relative">
+        
+        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 flex items-center justify-between z-30 sticky top-0">
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Government Treasury Hub</h2>
+                <p class="text-[11px] text-slate-500 font-medium mt-0.5">Consolidated view of all government entity accounts and transactions.</p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button onclick="toggleDropdown(document.getElementById('notifDropdown'))" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-indigo-600 transition interactive-press relative">
+                        <i class="ph-fill ph-bell text-lg"></i>
+                    </button>
+                    
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                        <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                            <h3 class="font-bold text-slate-800 text-sm">System Alerts</h3>
+                            <button class="text-xs text-indigo-600 font-bold hover:text-indigo-800">Dismiss all</button>
+                        </div>
+                        <div id="notifList" class="max-h-72 overflow-y-auto">
+                            <div class="p-4 text-center text-sm text-slate-500">No new alerts.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="openAddAccountModal()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-200 flex items-center gap-2 interactive-press">
+                    <i class="ph-bold ph-plus-circle text-lg"></i> Open Account
+                </button>
+            </div>
+        </header>
+
+        <div class="p-10 max-w-[1600px] mx-auto w-full pb-24">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="glass-card rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shrink-0"><i class="ph-fill ph-briefcase text-2xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Treasury Pool</p>
+                        <h3 id="statTotalPool" class="text-3xl font-extrabold text-slate-900">ZMW 8.2B</h3>
+                    </div>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shrink-0"><i class="ph-fill ph-buildings text-2xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Active Mandates</p>
+                        <h3 id="statActiveCount" class="text-3xl font-extrabold text-slate-900">0</h3>
+                    </div>
+                </div>
+                
+                <div class="glass-card rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 shrink-0"><i class="ph-fill ph-chart-pie-slice text-2xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Utilization Avg</p>
+                        <h3 id="statUtilization" class="text-3xl font-extrabold text-slate-900">62.4%</h3>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden group hover:-translate-y-1 transition-transform border-emerald-200 bg-emerald-50/30">
+                    <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0"><i class="ph-fill ph-check-circle text-2xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-emerald-600 font-black uppercase tracking-widest mb-1">Compliance</p>
+                        <h3 class="text-3xl font-extrabold text-emerald-700">100%</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-[2rem] shadow-sm overflow-hidden flex flex-col min-h-[500px]">
+                
+                <div class="px-8 py-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/50">
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900">Entity Account Ledger</h3>
+                        <p class="text-xs text-slate-500 font-medium">Real-time monitoring of departmental funding and expenditure.</p>
+                    </div>
+                    
+                    <div class="relative w-full sm:w-80 shrink-0">
+                        <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="text" id="accountSearch" onkeyup="filterAccounts()" placeholder="Search ministry or ID..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition shadow-sm">
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto flex-1">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-slate-50/50 text-slate-400 border-b border-slate-100">
+                            <tr>
+                                <th class="px-8 py-5 font-black tracking-widest uppercase text-[10px]">Department Entity</th>
+                                <th class="px-8 py-5 font-black tracking-widest uppercase text-[10px]">Mandate Ref</th>
+                                <th class="px-8 py-5 font-black tracking-widest uppercase text-[10px]">Financial Standing</th>
+                                <th class="px-8 py-5 font-black tracking-widest uppercase text-[10px] text-right">Allocation Limit</th>
+                                <th class="px-8 py-5 font-black tracking-widest uppercase text-[10px] text-center">Status</th>
+                                <th class="px-8 py-5"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="govTableBody" class="divide-y divide-slate-50 bg-white">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="accountModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 modal-overlay" onclick="toggleModal('accountModal', false)"></div>
+        <div class="bg-white rounded-[2rem] shadow-2xl max-w-md w-full p-8 relative z-10 modal-animate border border-slate-100">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900">New Treasury Mandate</h2>
+                    <p class="text-xs font-medium text-slate-500 mt-1">Provision a new government account.</p>
+                </div>
+                <button onclick="toggleModal('accountModal', false)" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <form id="newAccountForm" onsubmit="handleAccountSubmit(event)" class="space-y-5">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Department Name</label>
+                    <input type="text" id="newAccName" required class="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 outline-none font-medium" placeholder="e.g. Ministry of Energy">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Initial Balance (ZMW)</label>
+                        <input type="number" id="newAccBalance" required min="0" class="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 outline-none font-medium text-slate-700" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Funding Limit (ZMW)</label>
+                        <input type="number" id="newAccLimit" required min="1000" class="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 outline-none font-medium text-slate-700" placeholder="1000000">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4 border-t border-slate-100 mt-4">
+                    <button type="button" onclick="toggleModal('accountModal', false)" class="flex-1 py-3.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition interactive-press">Cancel</button>
+                    <button type="submit" class="flex-[2] py-3.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/30 interactive-press flex justify-center items-center gap-2">
+                        <i class="ph-bold ph-check-circle text-lg"></i> Establish Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-20 opacity-0 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl transition-all duration-500 flex items-center gap-4 z-[70] pointer-events-none">
+        <div class="w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+            <i id="toastIcon" class="ph-bold ph-check text-xl"></i>
+        </div>
+        <div>
+            <h4 id="toastTitle" class="text-sm font-bold tracking-wide">Success</h4>
+            <p id="toastMessage" class="text-xs text-slate-300 font-medium mt-0.5">Action completed.</p>
+        </div>
+    </div>
+
+    <button id="supportBtn" onclick="document.getElementById('chatWindow').classList.toggle('hidden')" class="fixed bottom-6 right-6 w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-slate-800 transition z-40 interactive-press border border-slate-700">
+        <i class="ph-fill ph-sparkle text-xl text-indigo-400"></i>
+    </button>
+    <div id="chatWindow" class="fixed bottom-24 right-6 w-80 h-96 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl flex flex-col hidden z-40 border border-slate-200/80 overflow-hidden modal-animate">
+        <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+            <div class="flex items-center gap-2"><i class="ph-fill ph-sparkle text-indigo-400"></i><h3 class="font-bold text-sm">Treasury Assistant</h3></div>
+            <button onclick="document.getElementById('chatWindow').classList.add('hidden')" class="text-slate-400 hover:text-white transition"><i class="ph ph-x"></i></button>
+        </div>
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50">
+            <div class="flex justify-start"><div class="bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-sm text-xs font-medium shadow-sm">I monitor the consolidated treasury pool. I can retrieve account balances or check compliance status. What do you need?</div></div>
+        </div>
+        <form id="chatForm" class="p-4 bg-white border-t border-slate-100 flex gap-2">
+            <input id="chatInput" type="text" placeholder="Query accounts..." class="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-indigo-400 transition">
+            <button type="submit" class="w-9 h-9 flex items-center justify-center bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"><i class="ph-fill ph-paper-plane-tilt"></i></button>
+        </form>
+    </div>
+
+    <script>
+        // --- 1. MOCK DATABASE (BOZ Context) ---
+        let accountsData = [
+            { id: "BOZ-GOV-001", name: "Ministry of Health", balance: 2400000000, limit: 5000000000, status: "Active" },
+            { id: "BOZ-GOV-045", name: "Ministry of Education", balance: 1850000000, limit: 3000000000, status: "Active" },
+            { id: "BOZ-GOV-112", name: "Transport & Infrastructure", balance: 640000000, limit: 4000000000, status: "Review" },
+            { id: "BOZ-GOV-098", name: "National Defense Fund", balance: 4200000000, limit: 5000000000, status: "Active" },
+            { id: "BOZ-GOV-554", name: "Ministry of Agriculture", balance: 120000000, limit: 1000000000, status: "Active" }
+        ];
+
+        // --- 2. FORMATTING & RENDER ---
+        function formatZMWCompact(val) {
+            return new Intl.NumberFormat('en-ZM', { style: 'currency', currency: 'ZMW', notation: 'compact', maximumFractionDigits: 1 }).format(val);
+        }
+        
+        function formatZMW(val) {
+            return new Intl.NumberFormat('en-ZM', { style: 'currency', currency: 'ZMW' }).format(val).replace('ZMW', '').trim();
+        }
+
+        function updateMetrics() {
+            document.getElementById('statActiveCount').innerText = accountsData.length;
+            
+            const totalBal = accountsData.reduce((sum, acc) => sum + acc.balance, 0);
+            const totalLimit = accountsData.reduce((sum, acc) => sum + acc.limit, 0);
+            
+            document.getElementById('statTotalPool').innerText = formatZMWCompact(totalBal);
+            
+            const util = totalLimit > 0 ? (totalBal / totalLimit) * 100 : 0;
+            document.getElementById('statUtilization').innerText = `${util.toFixed(1)}%`;
+        }
+
+        function renderAccounts(dataToRender = accountsData) {
+            const tbody = document.getElementById('govTableBody');
+            tbody.innerHTML = '';
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-8 py-12 text-center text-slate-500 font-bold"><i class="ph-bold ph-file-dashed text-3xl mb-2 text-slate-300 block"></i> No accounts found matching criteria.</td></tr>`;
+                return;
+            }
+
+            dataToRender.forEach((acc, i) => {
+                const util = (acc.balance / acc.limit) * 100;
+                const statusTheme = acc.status === 'Active' ? 'emerald' : 'amber';
+                
+                const row = `
+                    <tr onclick="openAccountDetails('${acc.id}', '${acc.name}')" class="group hover:bg-slate-50/80 transition-colors border-b border-slate-50 animate-row cursor-pointer" style="animation-delay: ${i * 50}ms">
+                        <td class="px-8 py-6">
+                            <span class="text-sm font-bold text-slate-900 block group-hover:text-indigo-600 transition-colors">${acc.name}</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5 block">Institutional Entity</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="font-mono text-xs font-bold px-3 py-1.5 bg-slate-100 group-hover:bg-white border border-slate-200 rounded-lg text-slate-600 transition-colors">${acc.id}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-32">
+                                    <span class="text-sm font-black text-slate-900 block mb-1">${formatZMWCompact(acc.balance)}</span>
+                                    <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="progress-bar-fill h-full bg-indigo-500 rounded-full" style="width: ${util}%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-500">${util.toFixed(0)}%</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <span class="text-sm font-black text-slate-700">${formatZMWCompact(acc.limit)}</span>
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-${statusTheme}-50 text-${statusTheme}-700 rounded-md text-[10px] uppercase font-black tracking-widest border border-${statusTheme}-200">
+                                <div class="w-1.5 h-1.5 rounded-full bg-${statusTheme}-500"></div> ${acc.status}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <button class="text-indigo-600 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end w-full gap-1">
+                                View <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        // --- 3. FILTERING & SEARCH ---
+        function filterAccounts() {
+            const query = document.getElementById('accountSearch').value.toLowerCase();
+            const filtered = accountsData.filter(a => a.name.toLowerCase().includes(query) || a.id.toLowerCase().includes(query));
+            renderAccounts(filtered);
+        }
+
+        // --- 4. MODAL & ACTIONS ---
+        function toggleModal(id, show) {
+            const modal = document.getElementById(id);
+            if(show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.querySelector('.modal-animate').classList.remove('scale-95', 'opacity-0');
+                    modal.querySelector('.modal-animate').classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                modal.querySelector('.modal-animate').classList.remove('scale-100', 'opacity-100');
+                modal.querySelector('.modal-animate').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            }
+        }
+
+        function openAccountDetails(accountId, accountName) {
+            showToast('Opening Ledger', `Retrieving full audit trail for ${accountName} (${accountId})`, 'ph-folder-open', 'text-indigo-400');
+        }
+
+        function openAddAccountModal() {
+            toggleModal('accountModal', true);
+        }
+
+        function handleAccountSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('newAccName').value.trim();
+            const balance = parseFloat(document.getElementById('newAccBalance').value);
+            const limit = parseFloat(document.getElementById('newAccLimit').value);
+
+            if(balance > limit) {
+                showToast("Validation Error", "Initial balance cannot exceed funding limit.", "ph-warning-circle", "text-amber-500");
+                return;
+            }
+
+            const newAcc = {
+                id: `BOZ-GOV-${Math.floor(100+Math.random()*899)}`,
+                name: name,
+                balance: balance,
+                limit: limit,
+                status: "Active"
+            };
+            
+            accountsData.unshift(newAcc);
+            renderAccounts();
+            updateMetrics();
+            
+            toggleModal('accountModal', false);
+            e.target.reset();
+            showToast('Mandate Established', `Successfully provisioned profile for ${newAcc.name}`, 'ph-check-circle', 'text-emerald-400');
+        }
+
+        // --- 5. UTILS & INIT ---
+        function showToast(title, msg, icon='ph-check', color='text-indigo-400') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').className = `ph-bold ${icon} text-xl ${color}`;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        function toggleDropdown(el) {
+            if(el.classList.contains('hidden')) {
+                document.getElementById('notifDropdown').classList.add('hidden', 'opacity-0', 'scale-95');
+                el.classList.remove('hidden'); 
+                setTimeout(() => el.classList.remove('opacity-0', 'scale-95'), 10);
+            } else {
+                el.classList.add('opacity-0', 'scale-95'); setTimeout(() => el.classList.add('hidden'), 200);
+            }
+        }
+
+        function closeAllDropdowns(e) {
+            const notif = document.getElementById('notifDropdown');
+            if (!notif.contains(e.target) && !e.target.closest('button[onclick*="toggleDropdown"]')) {
+                notif.classList.add('opacity-0', 'scale-95'); setTimeout(() => notif.classList.add('hidden'), 200);
+            }
+        }
+
+        // Chat Form Handler
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            const chatLog = document.getElementById('chatMessages');
+            chatLog.insertAdjacentHTML('beforeend', `<div class="flex justify-end"><div class="bg-indigo-600 text-white px-4 py-3 rounded-2xl rounded-tr-sm text-xs font-medium shadow-sm max-w-[80%]">${msg}</div></div>`);
+            input.value = '';
+            chatLog.scrollTop = chatLog.scrollHeight;
+            setTimeout(() => {
+                chatLog.insertAdjacentHTML('beforeend', `<div class="flex justify-start"><div class="bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-2xl rounded-tl-sm text-xs font-medium shadow-sm max-w-[80%]">Querying ledger matrix...</div></div>`);
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }, 600);
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderAccounts();
+            updateMetrics();
+        });
+    </script>
+</body>
+</html>

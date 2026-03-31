@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Zambia - Transfers & Payments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .interactive-press:active { transform: scale(0.97); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05); }
+        .animate-fade-in-up { animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        
+        /* Hide scrollbar for clean horizontal scrolling */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f1f5f9; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .bg-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        
+        /* Enhanced Animations for Transfers Page */
+        .tab-container { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .transfer-card { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; opacity: 0; }
+        
+        .network-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        .network-btn:nth-child(1) { animation-delay: 0s; }
+        .network-btn:nth-child(2) { animation-delay: 0.05s; }
+        .network-btn:nth-child(3) { animation-delay: 0.1s; }
+        .network-btn:nth-child(4) { animation-delay: 0.15s; }
+        .network-btn:nth-child(5) { animation-delay: 0.2s; }
+        .network-btn:nth-child(6) { animation-delay: 0.25s; }
+        .network-btn:nth-child(7) { animation-delay: 0.3s; }
+        .network-btn:nth-child(8) { animation-delay: 0.35s; }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Channel cards animation */
+        .channel-card {
+            animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+        
+        .channel-card:nth-child(1) { animation-delay: 0s; }
+        .channel-card:nth-child(2) { animation-delay: 0.1s; }
+        .channel-card:nth-child(3) { animation-delay: 0.2s; }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Icon pulse for status badges */
+        .icon-pulse-sm { animation: iconPulse 2s ease-in-out infinite; }
+        
+        @keyframes iconPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Smooth hover for buttons */
+        .btn-smooth {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-smooth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+        }
+        
+        /* Form input smooth animation */
+        .input-smooth {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-smooth:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-[#f8fafc] flex h-screen overflow-hidden text-slate-800" onclick="closeAllDropdowns(event)">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-40 mobile-header">
+        <div class="flex items-center space-x-2">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-green-500/30"><i class="ph ph-bank text-sm"></i></div>
+            <span class="font-bold text-sm text-slate-800">BOZ</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="notifBtnMobile" onclick="toggleNotifications(event)" class="text-slate-400 hover:text-blue-600 transition relative p-2 bg-slate-50 rounded-full">
+                <i class="ph ph-bell text-lg"></i>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            </button>
+            <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="touch-button p-2">
+                <div class="hamburger w-6 h-5 flex flex-col justify-between cursor-pointer">
+                    <span class="line h-0.5 w-6 bg-slate-800 rounded transition"></span>
+                    <span class="line h-0.5 w-6 bg-slate-800 rounded transition"></span>
+                    <span class="line h-0.5 w-6 bg-slate-800 rounded transition"></span>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Backdrop -->
+    <div id="mobileBackdrop" class="md:hidden fixed inset-0 bg-black/50 z-30 hidden" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside id="mobileSidebar" class="md:hidden fixed left-0 top-0 bottom-0 w-64 bg-slate-900 text-slate-300 flex flex-col z-40 hidden mobile-sidebar" style="transform: translateX(-100%);">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950 -z-10"></div>
+        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-green-500/30"><i class="ph ph-bank text-xl"></i></div>
+            <span class="text-lg font-bold tracking-wide">Bank of Zambia</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-2 mt-4 overflow-y-auto">
+            <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-squares-four text-xl"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="transfers.html" class="flex items-center space-x-3 text-white px-4 py-3 rounded-xl nav-link-active transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-arrows-left-right text-xl"></i>
+                <span class="font-medium">Transfers</span>
+            </a>
+            <a href="wallet.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-wallet text-xl"></i>
+                <span class="font-medium">Wallet & Payees</span>
+            </a>
+            <a href="cards.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-credit-card text-xl"></i>
+                <span class="font-medium">Cards</span>
+            </a>
+            <a href="statements.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-file-text text-xl"></i>
+                <span class="font-medium">Statements</span>
+            </a>
+            <a href="calendar.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-calendar text-xl"></i>
+                <span class="font-medium">Calendar</span>
+            </a>
+            <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-gear text-xl"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-800 space-y-2">
+            <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press" onclick="closeMobileMenu()">
+                <i class="ph ph-sliders text-xl"></i>
+                <span class="font-medium">Channels</span>
+            </a>
+            <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-400 interactive-press">
+                <i class="ph ph-sign-out text-xl"></i>
+                <span class="font-medium">Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex z-10 border-r border-slate-800 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950 -z-10"></div>
+        
+        <div class="p-6 flex items-center space-x-3 text-white">
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow-lg shadow-green-500/30"><i class="ph ph-bank text-xl"></i></div>
+            <span class="text-xl font-bold tracking-wide">Bank of Zambia</span>
+        </div>
+        
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-squares-four text-xl"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="transfers.html" class="flex items-center space-x-3 text-white px-4 py-3 rounded-xl nav-link-active transition interactive-press">
+                <i class="ph ph-arrows-left-right text-xl"></i>
+                <span class="font-medium">Transfers</span>
+            </a>
+            <a href="wallet.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-wallet text-xl"></i>
+                <span class="font-medium">Wallet & Payees</span>
+            </a>
+            <a href="cards.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-credit-card text-xl"></i>
+                <span class="font-medium">Cards</span>
+            </a>
+            <a href="statements.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-file-text text-xl"></i>
+                <span class="font-medium">Statements</span>
+            </a>
+            <a href="calendar.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-calendar text-xl"></i>
+                <span class="font-medium">Calendar</span>
+            </a>
+            <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
+                <i class="ph ph-gear text-xl"></i>
+                <span class="font-medium">Settings</span>
+            </a>
+        </nav>
+
+        <div class="p-4 mt-auto">
+            <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press mb-4">
+                <i class="ph ph-sliders text-xl"></i>
+                <span class="font-medium">Channels</span>
+            </a>
+            <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-400 interactive-press">
+                <i class="ph ph-sign-out text-xl"></i>
+                <span class="font-medium">Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto relative md:pt-0 pt-16 pb-20 md:pb-0">
+        
+        <header class="bg-glass border-b border-slate-200/80 px-4 md:px-8 py-4 md:py-5 flex flex-col md:flex-row md:justify-between md:items-center sticky top-0 z-30 shadow-sm gap-3 md:gap-0">
+            <div>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">Transfers & Payments</h2>
+                <p class="text-xs md:text-sm text-slate-500 font-medium mt-0.5">Move money securely across accounts and payees.</p>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <div class="relative">
+                    <button id="notifBtn" onclick="toggleNotifications(event)" class="text-slate-500 hover:text-blue-600 transition relative p-2.5 bg-white rounded-full shadow-sm border border-slate-200 interactive-press">
+                        <i class="ph ph-bell text-xl font-bold"></i>
+                    </button>
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                        <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                            <h3 class="font-bold text-slate-800 text-sm">Notifications</h3>
+                            <button class="text-xs text-blue-600 font-bold hover:text-blue-800">Dismiss all</button>
+                        </div>
+                        <div class="p-4 text-center text-sm text-slate-500">
+                            No new alerts.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative border-l border-slate-200 pl-6">
+                    <div id="profileBtn" onclick="toggleProfile(event)" class="flex items-center space-x-3 cursor-pointer group interactive-press bg-white border border-slate-200 pl-2 pr-4 py-1.5 rounded-full shadow-sm hover:border-blue-300 transition">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+                            JD
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <p class="text-xs font-bold text-slate-700 leading-tight">John Doe</p>
+                            <p class="text-[10px] text-emerald-500 font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Verified</p>
+                        </div>
+                        <i class="ph ph-caret-down text-slate-400 font-bold group-hover:text-blue-500 transition"></i>
+                    </div>
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                        <div class="py-2">
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition">
+                                <i class="ph ph-user-circle text-lg"></i> My Profile
+                            </a>
+                            <div class="h-px bg-slate-100 my-1"></div>
+                            <a href="#" onclick="handleLogout(event)" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
+                                <i class="ph ph-sign-out text-lg"></i> Secure Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-4 md:p-8 max-w-[1200px] mx-auto w-full pb-24">
+            
+            <div class="flex space-x-2 md:space-x-4 border-b border-slate-200 mb-8 tab-container" style="animation-delay: 0s;">
+                <button onclick="switchTab('internal')" id="tab-internal" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press flex items-center gap-1">
+                    <i class="ph ph-squares-four"></i>Own Accounts
+                </button>
+                <button onclick="switchTab('local')" id="tab-local" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press flex items-center gap-1">
+                    <i class="ph ph-bank"></i>Local Bank
+                </button>
+                <button onclick="switchTab('network')" id="tab-network" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press relative flex items-center gap-1">
+                    <i class="ph ph-globe"></i>All Networks <span class="ml-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full font-bold badge-pulse">NEW</span>
+                </button>
+                <button onclick="switchTab('mobile')" id="tab-mobile" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press flex items-center gap-1">
+                    <i class="ph ph-mobile-camera"></i>Mobile Money
+                </button>
+                <button onclick="switchTab('bills')" id="tab-bills" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press flex items-center gap-1">
+                    <i class="ph ph-receipt"></i>Pay Bills
+                </button>
+                <button onclick="switchTab('intl')" id="tab-intl" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press flex items-center gap-1">
+                    <i class="ph ph-airplane"></i>International
+                </button>
+                <button onclick="openReportWriter()" class="text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press md:ml-auto flex items-center gap-1 border-l border-slate-200 pl-4 hover:shadow-lg scale-hover">
+                    <i class="ph ph-file-text text-lg"></i> Custom Reports
+                </button>
+            </div>
+
+            <div class="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 md:p-10 relative transfer-card" style="animation-delay: 0.1s;">
+                
+                <div class="mb-8 p-5 bg-slate-50 border border-slate-100 rounded-2xl">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center justify-between">
+                        <span class="flex items-center gap-1"><i class="ph ph-arrow-up-right text-blue-600"></i>Transfer From</span>
+                        <span class="text-emerald-500 font-bold flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Active</span>
+                    </label>
+                    <select id="fromAccount" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white hover:border-blue-300 transition cursor-pointer font-bold text-slate-700 text-sm shadow-sm input-smooth">
+                        </select>
+                </div>
+
+                <form id="transferForm" class="space-y-8">
+                    
+                    <div id="dynamic-fields" class="transition-all duration-300">
+                        </div>
+
+                    <div id="universal-amount-fields" class="pt-4 border-t border-slate-100">
+                        <!-- Settlement Channel Selection (for local transfers) -->
+                        <div id="channelSection" class="hidden mb-8 pb-8 border-b border-slate-100">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="ph ph-path text-lg text-blue-600"></i>
+                                Settlement Channel <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <label onclick="selectChannel('ach')" class="relative cursor-pointer channel-card">
+                                    <input type="radio" name="channel" value="ach" class="hidden peer" id="channel-ach">
+                                    <div class="peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-200 border-2 border-slate-200 rounded-xl p-4 transition hover:border-blue-400 hover:shadow-lg">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <i class="ph ph-clock-clockwise text-xl text-emerald-600"></i>
+                                                <h4 class="font-bold text-slate-800 text-sm">ACH Transfer</h4>
+                                            </div>
+                                            <span class="text-sm font-bold text-slate-400">1-2 Days</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500">Standard bank-to-bank transfers. Cost-effective for most transfers.</p>
+                                        <div class="mt-3 pt-3 border-t border-slate-200">
+                                            <p class="text-xs font-bold text-emerald-600 flex items-center gap-1"><i class="ph ph-currency-circle-dollar"></i>Fee: ZMW 50</p>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label onclick="selectChannel('rtgs')" class="relative cursor-pointer channel-card">
+                                    <input type="radio" name="channel" value="rtgs" class="hidden peer" id="channel-rtgs">
+                                    <div class="peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-200 border-2 border-slate-200 rounded-xl p-4 transition hover:border-blue-400 hover:shadow-lg">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <i class="ph ph-lightning text-xl text-orange-600"></i>
+                                                <h4 class="font-bold text-slate-800 text-sm">RTGS (Same Day)</h4>
+                                            </div>
+                                            <span class="text-sm font-bold text-orange-600">1-2 Hours</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500">Real-Time Gross Settlement. Faster processing for urgent transfers.</p>
+                                        <div class="mt-3 pt-3 border-t border-slate-200">
+                                            <p class="text-xs font-bold text-orange-600 flex items-center gap-1"><i class="ph ph-currency-circle-dollar"></i>Fee: ZMW 150</p>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label onclick="selectChannel('swift')" class="relative cursor-pointer channel-card">
+                                    <input type="radio" name="channel" value="swift" class="hidden peer" id="channel-swift">
+                                    <div class="peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-200 border-2 border-slate-200 rounded-xl p-4 transition hover:border-blue-400 hover:shadow-lg">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="flex items-center gap-2">
+                                                <i class="ph ph-globe text-xl text-blue-600"></i>
+                                                <h4 class="font-bold text-slate-800 text-sm">SWIFT (International)</h4>
+                                            </div>
+                                            <span class="text-sm font-bold text-blue-600">2-3 Days</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500">International wire transfers with compliance checks.</p>
+                                        <div class="mt-3 pt-3 border-t border-slate-200">
+                                            <p class="text-xs font-bold text-blue-600 flex items-center gap-1"><i class="ph ph-currency-circle-dollar"></i>Fee: ZMW 500</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Beneficiary Network Selection (for all networks tab) -->
+                        <div id="networkSection" class="hidden mb-8 pb-8 border-b border-slate-100">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="ph ph-globe text-lg text-blue-600"></i>
+                                Select Destination Network <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <button type="button" onclick="selectNetwork('stanbic')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-bank"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">Stanbic Bank</div>
+                                    <div class="text-xs text-slate-500">Local</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('zanaco')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-bank"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">ZANACO</div>
+                                    <div class="text-xs text-slate-500">Local</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('abb')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-globe"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">ABN AMRO</div>
+                                    <div class="text-xs text-slate-500">International</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('mtn')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-phone"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">MTN Mobile</div>
+                                    <div class="text-xs text-slate-500">Mobile Network</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('airtel')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-phone"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">Airtel Zambia</div>
+                                    <div class="text-xs text-slate-500">Mobile Network</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('natsave')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-piggy-bank"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">Natsave</div>
+                                    <div class="text-xs text-slate-500">Savings</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('investrust')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-trending-up"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">Investrust</div>
+                                    <div class="text-xs text-slate-500">Microfinance</div>
+                                </button>
+                                <button type="button" onclick="selectNetwork('swift-global')" class="network-btn p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition text-center hover:shadow-lg">
+                                    <div class="text-2xl mb-2"><i class="ph ph-globe-hemisphere-west"></i></div>
+                                    <div class="font-bold text-sm text-slate-800 mb-1">SWIFT Global</div>
+                                    <div class="text-xs text-slate-500">International</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                    <i class="ph ph-money text-blue-600"></i>Amount to Transfer
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-3.5 text-slate-400 font-bold text-sm" id="currencySymbol">KES</span>
+                                    <input type="number" id="transferAmount" class="w-full pl-14 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-bold text-xl text-slate-800 transition input-smooth" placeholder="0.00" required min="1">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                    <i class="ph ph-calendar text-blue-600"></i>Transfer Date
+                                </label>
+                                <input type="date" id="transferDate" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none text-slate-800 font-bold text-sm cursor-pointer transition input-smooth" required>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                <i class="ph ph-note text-blue-600"></i>Description / Reason (Optional)
+                            </label>
+                            <input type="text" id="transferDesc" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none font-medium text-sm transition input-smooth" placeholder="e.g., Rent Payment, Upwork Invoice">
+                        </div>
+                    </div>
+
+                    <div class="pt-8 flex flex-col md:flex-row justify-end items-center gap-4">
+                        <button type="reset" class="w-full md:w-auto px-8 py-4 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition interactive-press text-sm btn-smooth flex items-center justify-center gap-2">
+                            <i class="ph ph-arrow-counterclockwise"></i><span>Reset Form</span>
+                        </button>
+                        <button type="submit" class="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition shadow-lg shadow-blue-500/30 interactive-press flex justify-center items-center gap-2 btn-smooth">
+                            <span>Review Transfer</span> <i class="ph ph-arrow-right font-bold text-lg"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div id="reviewModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-3xl p-0 max-w-md w-full shadow-2xl transform transition-all scale-95 opacity-0 relative overflow-hidden" id="modalContent">
+            
+            <button onclick="closeModal()" class="absolute top-5 right-5 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition interactive-press">
+                <i class="ph ph-x font-bold"></i>
+            </button>
+
+            <div class="bg-blue-50 p-8 text-center border-b border-blue-100">
+                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
+                    <i class="ph ph-paper-plane-right text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-slate-800 tracking-tight">Review Transfer</h3>
+                <p class="text-sm font-medium text-slate-500 mt-1">Please verify the details before confirming.</p>
+            </div>
+            
+            <div class="p-8">
+                <div class="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100 mb-8">
+                    <div class="flex justify-between border-b border-slate-200/60 pb-3">
+                        <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">To Recipient:</span>
+                        <span class="font-bold text-slate-800 text-sm text-right" id="reviewTo">--</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200/60 pb-3">
+                        <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Destination:</span>
+                        <span class="font-bold text-slate-800 text-sm text-right" id="reviewDest">--</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200/60 pb-3">
+                        <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Process Date:</span>
+                        <span class="font-bold text-slate-800 text-sm text-right" id="reviewDate">--</span>
+                    </div>
+                    
+                    <div class="flex justify-between pt-2 items-center">
+                        <span class="text-xs text-blue-600 font-bold uppercase tracking-widest">Total Amount:</span>
+                        <span class="font-extrabold text-blue-600 text-2xl tracking-tight" id="reviewAmount">--</span>
+                    </div>
+                </div>
+
+                <button onclick="processTransfer()" id="confirmBtn" class="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 flex justify-center items-center interactive-press text-base">
+                    <span id="btnText">Confirm & Send</span>
+                    <i class="ph ph-spinner-gap animate-spin hidden ml-2 text-xl" id="btnSpinner"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-50 border border-slate-700">
+        <i id="toastIcon" class="ph ph-check-circle text-emerald-400 text-2xl font-fill"></i>
+        <div>
+            <h4 id="toastTitle" class="font-bold tracking-wide text-sm">Transfer Successful</h4>
+            <p id="toastMessage" class="text-slate-400 text-xs font-medium mt-0.5">Your funds have been dispatched.</p>
+        </div>
+    </div>
+
+    <!-- Chat Support Widget -->
+    <button id="supportBtn" class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-tr from-blue-700 to-blue-500 text-white rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center z-40 interactive-press border-2 border-white/20">
+        <i id="supportIcon" class="ph ph-chat-teardrop-dots text-3xl transition-transform"></i>
+    </button>
+
+    <div id="chatWindow" class="hidden fixed bottom-28 right-8 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 flex flex-col overflow-hidden transform transition-all opacity-0 scale-95 origin-bottom-right" style="height: 500px;">
+        <div class="bg-gradient-to-r from-blue-700 to-blue-500 p-4 flex justify-between items-center text-white shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <i class="ph ph-robot text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold leading-tight">Transfer Support</h3>
+                    <p class="text-xs text-blue-100 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-lime-300"></span> Online</p>
+                </div>
+            </div>
+            <button onclick="toggleChat(event)" class="text-white/80 hover:text-white transition p-1 interactive-press">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-4">
+            <div class="flex items-start gap-2 animate-fade-in">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <i class="ph ph-robot text-sm"></i>
+                </div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 max-w-[80%]">
+                    Hello! I'm your transfer assistant. How can I help you today?
+                </div>
+            </div>
+        </div>
+        <div class="p-3 bg-white border-t border-slate-200 shrink-0">
+            <form id="chatForm" class="flex items-center gap-2">
+                <input type="text" id="chatInput" autocomplete="off" placeholder="Ask about transfers..." class="flex-1 px-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <button type="submit" class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition interactive-press shrink-0">
+                    <i class="ph ph-paper-plane-right text-lg"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. App State & Base Data ---
+        let accounts = {
+            checking: { id: 'checking', name: 'Main Checking', number: '**** 4589', balance: 1245000.00 },
+            savings: { id: 'savings', name: 'High-Yield Savings', number: '**** 8821', balance: 4520050.50 }
+        };
+        
+        let currentTab = 'internal';
+        
+        const fromAccountSelect = document.getElementById('fromAccount');
+        const dynamicFields = document.getElementById('dynamic-fields');
+        const transferForm = document.getElementById('transferForm');
+        
+        // Init
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('transferDate').valueAsDate = new Date(); 
+            updateAccountDropdown();
+            renderDynamicFields('internal');
+        });
+
+        function updateAccountDropdown() {
+            fromAccountSelect.innerHTML = `
+                <option value="checking">${accounts.checking.name} (${accounts.checking.number}) - Available: KES ${accounts.checking.balance.toLocaleString('en-KE', {minimumFractionDigits: 2})}</option>
+                <option value="savings">${accounts.savings.name} (${accounts.savings.number}) - Available: KES ${accounts.savings.balance.toLocaleString('en-KE', {minimumFractionDigits: 2})}</option>
+            `;
+        }
+
+        // --- 2. Tab & Form Rendering Logic ---
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // UI Tab Update
+            ['internal', 'local', 'mobile', 'bills', 'intl'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if(t === tab) {
+                    btn.className = "text-blue-600 font-bold border-b-2 border-blue-600 pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press";
+                } else {
+                    btn.className = "text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press";
+                }
+            });
+
+            renderDynamicFields(tab);
+        }
+
+        function renderDynamicFields(tab) {
+            let html = '';
+            
+            // Adjust currency symbol logic
+            const currSymbol = document.getElementById('currencySymbol');
+            if(tab === 'intl') {
+                currSymbol.innerText = "USD"; // Default mock for intl
+            } else {
+                currSymbol.innerText = "KES";
+            }
+
+            if (tab === 'internal') {
+                html = `
+                    <div class="mb-6 p-5 bg-blue-50/50 border border-blue-100 rounded-2xl">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">To Own Account</label>
+                        <select id="inputDestination" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-sm text-slate-700 cursor-pointer shadow-sm">
+                            <option value="High-Yield Savings">High-Yield Savings (**** 8821)</option>
+                            <option value="Main Checking">Main Checking (**** 4589)</option>
+                        </select>
+                        <input type="hidden" id="inputRecipient" value="Self (Internal Transfer)">
+                    </div>`;
+            } 
+            else if (tab === 'local') {
+                html = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Recipient Bank</label>
+                            <select id="inputDestination" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 hover:bg-white font-bold text-sm text-slate-700 cursor-pointer transition">
+                                <option value="Equity Bank">Equity Bank</option>
+                                <option value="KCB Bank">KCB Bank</option>
+                                <option value="Co-op Bank">Co-operative Bank</option>
+                                <option value="Absa Kenya">Absa Kenya</option>
+                                <option value="Standard Chartered">Standard Chartered</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Account Number</label>
+                            <input type="text" id="inputRecipientAcc" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition" placeholder="e.g. 021000..." required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Account Name</label>
+                            <input type="text" id="inputRecipient" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm bg-slate-50 hover:bg-white transition uppercase" placeholder="Full legal name of recipient" required>
+                        </div>
+                    </div>`;
+            }
+            else if (tab === 'mobile') {
+                html = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Mobile Network</label>
+                            <select id="inputDestination" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-emerald-50/30 font-bold text-sm text-emerald-800 cursor-pointer border-emerald-200">
+                                <option value="M-PESA">Safaricom M-PESA</option>
+                                <option value="Airtel Money">Airtel Money</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Phone Number</label>
+                            <input type="text" id="inputRecipient" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition" placeholder="e.g. 07XX XXX XXX or 254..." required>
+                        </div>
+                    </div>`;
+            }
+            else if (tab === 'bills') {
+                html = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Saved Biller / Paybill</label>
+                            <select id="inputDestination" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 hover:bg-white font-bold text-sm text-slate-700 cursor-pointer transition">
+                                <option value="KPLC Postpaid">KPLC Postpaid</option>
+                                <option value="KPLC Tokens">KPLC Prepaid (Tokens)</option>
+                                <option value="Nairobi Water">Nairobi Water</option>
+                                <option value="Zuku Internet">Zuku Internet</option>
+                                <option value="Safaricom Home Fibre">Safaricom Home Fibre</option>
+                                <option value="Other Paybill">Other Paybill / Till Number</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Account No. / Phone</label>
+                            <input type="text" id="inputRecipient" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition" placeholder="e.g. Acc No. or Phone" required>
+                        </div>
+                    </div>`;
+            }
+            else if (tab === 'intl') {
+                html = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Destination Country</label>
+                            <select id="inputCountry" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 hover:bg-white font-bold text-sm text-slate-700 cursor-pointer transition" onchange="document.getElementById('currencySymbol').innerText = this.options[this.selectedIndex].dataset.curr">
+                                <option value="USA" data-curr="USD">United States (USD)</option>
+                                <option value="UK" data-curr="GBP">United Kingdom (GBP)</option>
+                                <option value="EU" data-curr="EUR">European Union (EUR)</option>
+                                <option value="UG" data-curr="UGX">Uganda (UGX)</option>
+                                <option value="TZ" data-curr="TZS">Tanzania (TZS)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">SWIFT / BIC Code</label>
+                            <input type="text" id="inputDestination" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition uppercase" placeholder="e.g. BOFAUS3N" required>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">IBAN / Account Number</label>
+                            <input type="text" id="inputRecipientAccIntl" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition" placeholder="Account Number" required>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Recipient Name</label>
+                            <input type="text" id="inputRecipient" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm bg-slate-50 hover:bg-white transition uppercase" placeholder="Full legal name" required>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex items-start gap-3">
+                        <i class="ph-fill ph-info text-blue-500 text-lg mt-0.5"></i>
+                        <p class="text-xs text-blue-800 font-medium">International transfers may take 2-5 business days to clear. Standard SWIFT charges and forex markup will apply.</p>
+                    </div>`;
+            }
+
+            // Simple fade animation for field swap
+            dynamicFields.style.opacity = 0;
+            setTimeout(() => {
+                dynamicFields.innerHTML = html;
+                dynamicFields.style.opacity = 1;
+            }, 150);
+        }
+
+        // --- 3. SUBMIT & REVIEW LOGIC ---
+        transferForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amountInput = document.getElementById('transferAmount').value;
+            const amount = parseFloat(amountInput);
+            const selectedAcc = document.getElementById('fromAccount').value;
+            const date = document.getElementById('transferDate').value;
+            
+            // Extract contextual data based on active tab
+            let recipient = "Unknown";
+            let destination = "Unknown";
+            const currency = document.getElementById('currencySymbol').innerText;
+
+            try {
+                if (currentTab === 'internal') {
+                    recipient = "Own Account";
+                    destination = document.getElementById('inputDestination').value;
+                } else if (currentTab === 'local' || currentTab === 'intl') {
+                    recipient = document.getElementById('inputRecipient').value;
+                    const bank = document.getElementById('inputDestination').value; // Swift for Intl, Bank for local
+                    const acc = currentTab === 'intl' ? document.getElementById('inputRecipientAccIntl').value : document.getElementById('inputRecipientAcc').value;
+                    destination = `${bank} (Acc: ${acc})`;
+                } else if (currentTab === 'mobile' || currentTab === 'bills') {
+                    destination = document.getElementById('inputDestination').value; // Network or Biller
+                    const phoneOrAcc = document.getElementById('inputRecipient').value;
+                    recipient = phoneOrAcc; 
+                }
+            } catch(err) {
+                console.error("Data extraction error based on DOM structure.", err);
+            }
+
+            // Basic Validation (Assuming KES for core balance check)
+            if (currency === 'KES' && amount > accounts[selectedAcc].balance) {
+                showToast('Error', 'Insufficient funds in selected account.', 'ph-x-circle', 'text-red-400');
+                return;
+            }
+
+            // Format Review Modal Data
+            const formatOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+            document.getElementById('reviewTo').innerText = recipient;
+            document.getElementById('reviewDest').innerText = destination;
+            document.getElementById('reviewDate').innerText = date;
+            document.getElementById('reviewAmount').innerText = `${currency} ${amount.toLocaleString('en-KE', formatOptions)}`;
+
+            // Open Modal
+            const modal = document.getElementById('reviewModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        });
+
+        function closeModal() {
+            const modal = document.getElementById('reviewModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function processTransfer() {
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            btnText.innerText = "Processing...";
+            btnSpinner.classList.remove('hidden');
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('opacity-90');
+
+            setTimeout(() => {
+                const amount = parseFloat(document.getElementById('transferAmount').value);
+                const selectedAcc = document.getElementById('fromAccount').value;
+                const currency = document.getElementById('currencySymbol').innerText;
+                
+                // Deduct balance (Mocking forex conversion if not KES is complex, so keeping simple here)
+                if(currency === 'KES') {
+                    accounts[selectedAcc].balance -= amount;
+                }
+                updateAccountDropdown();
+                
+                transferForm.reset();
+                document.getElementById('transferDate').valueAsDate = new Date();
+                closeModal();
+
+                // Reset Button
+                btnText.innerText = "Confirm & Send";
+                btnSpinner.classList.add('hidden');
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-90');
+
+                showToast('Transfer Successful', 'Your funds have been securely dispatched.', 'ph-check-circle', 'text-emerald-400');
+            }, 1500);
+        }
+
+        // --- 4. Global Nav & Utils ---
+        function handleLogout(e) {
+            e.preventDefault();
+            showToast('Logging out...', 'Session terminated.', 'ph-sign-out', 'text-red-400');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+        }
+
+        function toggleNotifications(e) { e.stopPropagation(); toggleDropdown(document.getElementById('notifDropdown')); }
+        function toggleProfile(e) { e.stopPropagation(); toggleDropdown(document.getElementById('profileDropdown')); }
+        
+        function toggleDropdown(el) { 
+            if(el.classList.contains('hidden')) {
+                document.getElementById('notifDropdown').classList.add('hidden', 'opacity-0', 'scale-95');
+                document.getElementById('profileDropdown').classList.add('hidden', 'opacity-0', 'scale-95');
+                el.classList.remove('hidden'); setTimeout(() => el.classList.remove('opacity-0', 'scale-95'), 10);
+            } else {
+                el.classList.add('opacity-0', 'scale-95'); setTimeout(() => el.classList.add('hidden'), 200);
+            }
+        }
+        
+        function closeAllDropdowns(e) {
+            const notif = document.getElementById('notifDropdown'); const prof = document.getElementById('profileDropdown');
+            if (!notif.contains(e.target) && !document.getElementById('notifBtn').contains(e.target)) { notif.classList.add('opacity-0', 'scale-95'); setTimeout(() => notif.classList.add('hidden'), 200); }
+            if (!prof.contains(e.target) && !document.getElementById('profileBtn').contains(e.target)) { prof.classList.add('opacity-0', 'scale-95'); setTimeout(() => prof.classList.add('hidden'), 200); }
+        }
+
+        function showToast(title, msg, icon='ph-check-circle', color='text-emerald-400') {
+            const t = document.getElementById('toast'); 
+            document.getElementById('toastTitle').innerText = title; 
+            document.getElementById('toastMessage').innerText = msg;
+            document.getElementById('toastIcon').className = `ph ${icon} ${color} text-2xl font-fill`;
+            t.classList.remove('hidden'); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => { t.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => t.classList.add('hidden'), 300); }, 3500);
+        }
+
+        // ===== CHAT SUPPORT WIDGET =====
+        document.addEventListener('DOMContentLoaded', initializeChat);
+        
+        const transferAIResponses = {
+            'transfer': 'I can help you with transfers! You can send money between your own accounts, to other banks in Kenya, or internationally. Which type of transfer would you like to make?',
+            'fee': 'Transfer fees vary based on the type of transfer and amount. Local transfers are typically free for amounts under KES 100,000, while international transfers have a fixed fee based on the destination country.',
+            'limit': 'Transfer limits depend on your account tier. Most customers can transfer up to KES 5,000,000 per transaction. Check your account settings for your specific limits.',
+            'time': 'Local transfers usually take 1-2 hours. International transfers can take 1-3 business days depending on the destination country.',
+            'own': 'Transfers between your own accounts are instant and free! Just select the accounts and the amount will be transferred immediately.',
+            'help': 'I can help you with sending money, checking transfer fees, understanding limits, or answering questions about transfer times. What do you need?',
+            'default': 'Hi! I\'m your transfer assistant. I can help you with account transfers, international payments, bills, and mobile money transfers. What would you like to do?'
+        };
+
+        function initializeChat() {
+            const supportBtn = document.getElementById('supportBtn');
+            const chatForm = document.getElementById('chatForm');
+            const chatWindow = document.getElementById('chatWindow');
+            
+            if (supportBtn) supportBtn.addEventListener('click', toggleChat);
+            if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
+            if (chatWindow) chatWindow.addEventListener('click', (e) => e.stopPropagation());
+        }
+
+        function toggleChat(e) {
+            if (e) e.stopPropagation();
+            const chatWindow = document.getElementById('chatWindow');
+            const supportIcon = document.getElementById('supportIcon');
+            
+            if (chatWindow.classList.contains('hidden')) {
+                chatWindow.classList.remove('hidden');
+                supportIcon.classList.replace('ph-chat-teardrop-dots', 'ph-caret-down');
+                setTimeout(() => {
+                    chatWindow.classList.remove('opacity-0', 'scale-95');
+                    chatWindow.classList.add('opacity-100', 'scale-100');
+                    document.getElementById('chatInput')?.focus();
+                }, 10);
+            } else {
+                chatWindow.classList.remove('opacity-100', 'scale-100');
+                chatWindow.classList.add('opacity-0', 'scale-95');
+                supportIcon.classList.replace('ph-caret-down', 'ph-chat-teardrop-dots');
+                setTimeout(() => chatWindow.classList.add('hidden'), 200);
+            }
+        }
+
+        function handleChatSubmit(e) {
+            e.preventDefault();
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            appendUserMessage(message);
+            chatInput.value = '';
+
+            const response = generateTransferAIResponse(message);
+            setTimeout(() => appendBotMessage(response), 800);
+        }
+
+        function generateTransferAIResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+            
+            if (msg.includes('transfer') && msg.includes('own')) return transferAIResponses['own'];
+            if (msg.includes('fee')) return transferAIResponses['fee'];
+            if (msg.includes('limit')) return transferAIResponses['limit'];
+            if (msg.includes('time')) return transferAIResponses['time'];
+            if (msg.includes('help')) return transferAIResponses['help'];
+            if (msg.includes('transfer')) return transferAIResponses['transfer'];
+            
+            return 'That\'s a good question! I\'m here to help with transfers. Ask me about fees, limits, or transfer times!';
+        }
+
+        function appendUserMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const html = `<div class="flex items-start gap-2 justify-end animate-fade-in"><div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none shadow-sm text-sm max-w-[80%]">${text}</div></div>`;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function appendBotMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const html = `<div class="flex items-start gap-2 animate-fade-in"><div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"><i class="ph ph-robot text-sm"></i></div><div class="bg-slate-100 border border-slate-200 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-800 max-w-[80%]">${text}</div></div>`;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ===== SETTLEMENT CHANNEL & NETWORK SELECTION =====
+        function selectChannel(channel) {
+            document.getElementById(`channel-${channel}`).checked = true;
+            showToast('Channel Selected', `${channel.toUpperCase()} settlement method selected.`, 'ph-check-circle', 'text-blue-400');
+        }
+
+        function selectNetwork(network) {
+            const btn = event.target.closest('button');
+            document.querySelectorAll('.network-btn').forEach(b => {
+                b.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+                b.classList.add('border-slate-200');
+            });
+            btn.classList.remove('border-slate-200');
+            btn.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+            showToast('Network Selected', `${network} network selected for transfer.`, 'ph-check-circle', 'text-blue-400');
+        }
+
+        // Update switchTab to handle new tab
+        const originalSwitchTab = switchTab;
+        switchTab = function(tab) {
+            currentTab = tab;
+            
+            // UI Tab Update
+            ['internal', 'local', 'network', 'mobile', 'bills', 'intl'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if(btn) {
+                    if(t === tab) {
+                        btn.className = "text-blue-600 font-bold border-b-2 border-blue-600 pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press relative";
+                    } else {
+                        btn.className = "text-slate-400 hover:text-slate-700 font-bold pb-3 px-2 transition text-sm uppercase tracking-wide interactive-press relative";
+                    }
+                }
+            });
+
+            if (tab === 'network') {
+                document.getElementById('channelSection').classList.add('hidden');
+                document.getElementById('networkSection').classList.remove('hidden');
+            } else if (tab === 'local') {
+                document.getElementById('channelSection').classList.remove('hidden');
+                document.getElementById('networkSection').classList.add('hidden');
+                document.getElementById('channel-ach').checked = true;
+            } else {
+                document.getElementById('channelSection').classList.add('hidden');
+                document.getElementById('networkSection').classList.add('hidden');
+            }
+
+            renderDynamicFields(tab);
+        };
+
+        // Add network tab content to renderDynamicFields
+        const originalRenderDynamicFields = renderDynamicFields;
+        renderDynamicFields = function(tab) {
+            if (tab === 'network') {
+                const html = `
+                    <div class="mb-6 p-5 bg-emerald-50/50 border border-emerald-100 rounded-2xl">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Recipient Details</label>
+                        <input type="text" id="inputRecipient" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm bg-slate-50 hover:bg-white transition uppercase mb-3" placeholder="Recipient name" required>
+                        <input type="text" id="inputRecipientAcc" class="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono font-bold text-sm bg-slate-50 hover:bg-white transition" placeholder="Account number" required>
+                        <input type="hidden" id="inputDestination" value="Multi-Network">
+                    </div>`;
+                
+                document.getElementById('dynamic-fields').innerHTML = html;
+            } else {
+                originalRenderDynamicFields.call(this, tab);
+            }
+        };
+
+        // ===== CUSTOM REPORT WRITER TOOL =====
+        function openReportWriter() {
+            const modal = document.createElement('div');
+            modal.id = 'reportModal';
+            modal.className = 'fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm p-4 overflow-y-auto modal-backdrop';
+            modal.innerHTML = `
+                <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl my-8 modal-enter">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-slate-800 to-slate-700 p-6 flex justify-between items-center text-white rounded-t-3xl">
+                        <div>
+                            <h2 class="text-2xl font-extrabold flex items-center gap-2"><i class="ph ph-file-text text-3xl"></i>Custom Transfer Report Builder</h2>
+                            <p class="text-sm text-slate-300 mt-1">Create personalized transfer reports with filters and formats</p>
+                        </div>
+                        <button onclick="closeReportModal()" class="text-white/80 hover:text-white transition p-1 text-2xl hover:bg-white/10 rounded-lg">
+                            <i class="ph ph-x"></i>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
+                        <!-- Date Range -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-1"><i class="ph ph-calendar text-blue-600"></i>From Date</label>
+                                <input type="date" id="reportFromDate" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 input-smooth">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-1"><i class="ph ph-calendar text-blue-600"></i>To Date</label>
+                                <input type="date" id="reportToDate" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 input-smooth">
+                            </div>
+                        </div>
+
+                        <!-- Filters -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-1"><i class="ph ph-funnel text-blue-600"></i>Transfer Type Filters</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> Own Accounts</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> Local Bank</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> Mobile Money</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> Bills</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> International</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" checked class="report-filter"> All Networks</label>
+                            </div>
+                        </div>
+
+                        <!-- Amount Range -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-1"><i class="ph ph-currency-circle-dollar text-emerald-600"></i>Min Amount (ZMW)</label>
+                                <input type="number" id="minAmount" value="0" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 input-smooth">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-1"><i class="ph ph-currency-circle-dollar text-emerald-600"></i>Max Amount (ZMW)</label>
+                                <input type="number" id="maxAmount" value="999999999" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 input-smooth">
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-1"><i class="ph ph-check text-emerald-600"></i>Status</label>
+                            <select id="reportStatus" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 input-smooth">
+                                <option value="all">All Statuses</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending">Pending</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+
+                        <!-- Report Format -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-1"><i class="ph ph-file text-blue-600"></i>Report Format</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition">
+                                    <input type="radio" name="format" value="pdf" checked> 
+                                    <span class="text-sm font-medium flex items-center gap-1"><i class="ph ph-file-pdf text-red-500"></i>PDF</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition">
+                                    <input type="radio" name="format" value="csv"> 
+                                    <span class="text-sm font-medium flex items-center gap-1"><i class="ph ph-file-csv text-emerald-500"></i>CSV</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition">
+                                    <input type="radio" name="format" value="excel"> 
+                                    <span class="text-sm font-medium flex items-center gap-1"><i class="ph ph-file-xls text-green-500"></i>Excel</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Report Sections -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-1"><i class="ph ph-list-checks text-blue-600"></i>Include in Report</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" class="report-include" checked> <i class="ph ph-chart-bar text-blue-500"></i>Summary Statistics</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" class="report-include" checked> <i class="ph ph-table text-blue-500"></i>Transaction Details</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" class="report-include"> <i class="ph ph-pie-chart text-blue-500"></i>Channel Breakdown</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" class="report-include"> <i class="ph ph-money text-emerald-500"></i>Fee Summary</label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:bg-blue-50 p-2 rounded-lg transition"><input type="checkbox" class="report-include"> <i class="ph ph-users-three text-purple-500"></i>Recipient Analysis</label>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex gap-4 pt-4 border-t border-slate-200">
+                            <button onclick="closeReportModal()" class="flex-1 px-6 py-3 border border-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition btn-smooth flex items-center justify-center gap-2">
+                                <i class="ph ph-x"></i>Cancel
+                            </button>
+                            <button onclick="generateReport()" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 btn-smooth">
+                                <i class="ph ph-download"></i> <span>Generate Report</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) closeReportModal();
+            });
+        }
+
+        function closeReportModal() {
+            const modal = document.getElementById('reportModal');
+            if(modal) modal.remove();
+        }
+
+        function generateReport() {
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const fromDate = document.getElementById('reportFromDate').value || 'All dates';
+            const toDate = document.getElementById('reportToDate').value || 'Today';
+            
+            showToast('Report Generating', `Creating ${format.toUpperCase()} report from ${fromDate} to ${toDate}...`, 'ph-download', 'text-emerald-400');
+            
+            setTimeout(() => {
+                showToast('Report Ready', `Your custom transfer report is ready for download!`, 'ph-check-circle', 'text-emerald-400');
+                closeReportModal();
+            }, 1500);
+        }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const backdrop = document.getElementById('mobileBackdrop');
+            const btn = document.getElementById('mobileMenuBtn');
+            
+            const isActive = sidebar.style.transform === 'translateX(0px)';
+            
+            if (isActive) {
+                closeMobileMenu();
+            } else {
+                sidebar.classList.remove('hidden');
+                backdrop.classList.remove('hidden');
+                btn.querySelector('.hamburger').classList.add('active');
+                setTimeout(() => {
+                    sidebar.style.transform = 'translateX(0)';
+                    sidebar.classList.add('active');
+                    backdrop.classList.add('active');
+                }, 10);
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const backdrop = document.getElementById('mobileBackdrop');
+            const btn = document.getElementById('mobileMenuBtn');
+            
+            sidebar.style.transform = 'translateX(-100%)';
+            sidebar.classList.remove('active');
+            backdrop.classList.remove('active');
+            btn.querySelector('.hamburger').classList.remove('active');
+            
+            setTimeout(() => {
+                sidebar.classList.add('hidden');
+                backdrop.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('mobileSidebar');
+            const btn = document.getElementById('mobileMenuBtn');
+            if (!sidebar.contains(e.target) && !btn.contains(e.target)) {
+                if (!sidebar.classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            }
+        });
+    </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-50 bottom-nav">
+        <div class="flex justify-around items-center h-20">
+            <a href="dashboard.html" class="flex flex-col items-center justify-center w-full h-full text-slate-600 hover:text-slate-800 transition">
+                <i class="ph ph-squares-four text-2xl mb-1"></i>
+                <span class="text-xs font-bold">Home</span>
+            </a>
+            <a href="transfers.html" class="flex flex-col items-center justify-center w-full h-full text-slate-800 transition nav-link-active">
+                <i class="ph ph-arrows-left-right text-2xl mb-1"></i>
+                <span class="text-xs font-bold">Send</span>
+            </a>
+            <a href="cards.html" class="flex flex-col items-center justify-center w-full h-full text-slate-600 hover:text-slate-800 transition">
+                <i class="ph ph-credit-card text-2xl mb-1"></i>
+                <span class="text-xs font-bold">Cards</span>
+            </a>
+            <a href="wallet.html" class="flex flex-col items-center justify-center w-full h-full text-slate-600 hover:text-slate-800 transition">
+                <i class="ph ph-wallet text-2xl mb-1"></i>
+                <span class="text-xs font-bold">Wallet</span>
+            </a>
+            <button onclick="toggleMobileMenu()" class="flex flex-col items-center justify-center w-full h-full text-slate-600 hover:text-slate-800 transition">
+                <i class="ph ph-list text-2xl mb-1"></i>
+                <span class="text-xs font-bold">Menu</span>
+            </button>
+        </div>
+    </nav>
+</body>
+</html>
