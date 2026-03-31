@@ -108,7 +108,6 @@
 </head>
 <body class="flex h-screen w-full bg-slate-50 overflow-hidden text-slate-800">
 
-    <!-- Left Side Decoration -->
     <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-[#0B0F19] via-[#151b2b] to-[#0B0F19] relative overflow-hidden flex-col justify-between p-12 lg:p-16 shadow-2xl z-10">
         <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-20"></div>
         <div class="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-green-600/30 blur-[120px] animate-float"></div>
@@ -150,117 +149,106 @@
         </div>
     </div>
 
-    <!-- Right Side - Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 relative bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col h-full">
         
-        <!-- Animated Background Orbs -->
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-[100px] animate-float"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-300/20 rounded-full blur-[100px] animate-float-delayed"></div>
-
-        <!-- Mobile Logo -->
-        <div class="absolute top-8 left-8 lg:hidden flex items-center space-x-3 z-20 animate-fade-in">
-            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg border border-white/20">
-                <i class="ph ph-bank text-2xl"></i>
-            </div>
-            <span class="text-2xl font-extrabold tracking-tight text-slate-900">BOZ</span>
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-[100px] animate-float"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-300/20 rounded-full blur-[100px] animate-float-delayed"></div>
         </div>
 
-        <!-- Login Container -->
-        <div class="w-full max-w-[480px] animate-slide-up relative z-10">
+        <div class="w-full h-full overflow-y-auto flex flex-col relative z-10">
             
-            <!-- Tab Switcher -->
-            <div class="bg-slate-200/50 p-1.5 rounded-2xl flex relative mb-10 w-full shadow-inner border border-white/60 backdrop-blur-sm">
-                <div id="tabIndicator" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-400 ease-out z-0"></div>
-                
-                <button id="btnCustomer" onclick="switchMode('customer')" class="relative z-10 flex-1 py-3 text-sm font-bold text-green-600 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
-                    <i class="ph ph-user text-lg"></i> <span class="hidden sm:inline">Customer</span>
-                </button>
-                <button id="btnAdmin" onclick="switchMode('admin')" class="relative z-10 flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
-                    <i class="ph ph-shield-check text-lg"></i> <span class="hidden sm:inline">Admin</span>
-                </button>
+            <div class="lg:hidden px-8 pt-8 pb-4 flex items-center space-x-3 shrink-0 animate-fade-in">
+                <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg border border-white/20">
+                    <i class="ph ph-bank text-2xl"></i>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight text-slate-900">BOZ</span>
             </div>
 
-            <!-- Form Card -->
-            <div class="glass-panel p-8 sm:p-10 rounded-3xl">
-                <div class="mb-8 animate-slide-down">
-                    <h2 id="formTitle" class="text-3xl sm:text-[36px] font-extrabold text-slate-900 tracking-tight leading-tight">Welcome back</h2>
-                    <p id="formSubtitle" class="text-sm text-slate-500 font-medium mt-3">Please enter your details to access your account.</p>
-                </div>
-
-                <!-- Login Form -->
-                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+            <div class="flex-1 flex flex-col justify-center px-6 py-8 sm:py-12 shrink-0">
+                <div class="w-full max-w-[480px] mx-auto animate-slide-up">
                     
-                    <!-- Email/Identifier Field -->
-                    <div class="animate-slide-down" style="animation-delay: 100ms;">
-                        <label id="identifierLabel" class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Email or Phone</label>
-                        <div class="relative group">
-                            <i id="identifierIcon" class="ph ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
-                            <input type="text" id="identifierInput" required class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="e.g. john@example.com">
-                            <span id="identifierError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
-                                <i class="ph ph-warning-circle"></i> <span id="identifierErrorText">Invalid email</span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div class="animate-slide-down" style="animation-delay: 150ms;">
-                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Password</label>
-                        <div class="relative group">
-                            <i class="ph ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
-                            <input type="password" id="passwordInput" required class="w-full pl-12 pr-12 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="••••••••">
-                            <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-green-600 transition-colors outline-none focus:outline-none">
-                                <i id="eyeIcon" class="ph ph-eye text-xl"></i>
-                            </button>
-                            <span id="passwordError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
-                                <i class="ph ph-warning-circle"></i> <span>Password required</span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Remember & Forgot Password -->
-                    <div class="flex items-center justify-between pt-2 animate-slide-down" style="animation-delay: 200ms;">
-                        <label class="flex items-center gap-2.5 cursor-pointer group">
-                            <div class="relative flex items-center justify-center">
-                                <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-lg checked:bg-indigo-600 checked:border-indigo-600 transition-all cursor-pointer">
-                                <i class="ph ph-check text-white absolute text-xs opacity-0 peer-checked:opacity-100 font-bold pointer-events-none transition-opacity"></i>
-                            </div>
-                            <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
-                        </label>
-                        <button type="button" id="forgotPasswordBtn" onclick="openForgotPasswordModal()" class="text-sm font-bold text-green-600 hover:text-green-800 hover:underline transition-all duration-200">Forgot password?</button>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="pt-4 animate-slide-down" style="animation-delay: 250ms;">
-                        <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-[0_8px_24px_rgba(34,197,94,0.35)] hover:shadow-[0_12px_32px_rgba(34,197,94,0.4)] interactive-press flex justify-center items-center gap-2 text-base focus:outline-none focus:ring-4 focus:ring-green-300">
-                            <span id="submitBtnText">Sign In Securely</span>
-                            <i id="submitSpinner" class="ph ph-spinner-gap hidden text-lg"></i>
-                            <i id="submitArrow" class="ph ph-arrow-right text-lg"></i>
+                    <div class="bg-slate-200/50 p-1.5 rounded-2xl flex relative mb-10 w-full shadow-inner border border-white/60 backdrop-blur-sm">
+                        <div id="tabIndicator" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 ease-out z-0"></div>
+                        
+                        <button id="btnCustomer" onclick="switchMode('customer')" class="relative z-10 flex-1 py-3 text-sm font-bold text-green-600 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
+                            <i class="ph ph-user text-lg"></i> <span class="hidden sm:inline">Customer</span>
+                        </button>
+                        <button id="btnAdmin" onclick="switchMode('admin')" class="relative z-10 flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
+                            <i class="ph ph-shield-check text-lg"></i> <span class="hidden sm:inline">Admin</span>
                         </button>
                     </div>
-                </form>
 
-                <!-- Footer -->
-                <div id="customerFooter" class="mt-8 text-center border-t border-slate-200 pt-6 animate-slide-down" style="animation-delay: 300ms;">
-                    <p class="text-sm font-medium text-slate-600">Don't have an account? <a href="#" class="font-bold text-green-600 hover:text-green-800 transition-colors">Create account</a></p>
+                    <div class="glass-panel p-8 sm:p-10 rounded-3xl">
+                        <div class="mb-8 animate-slide-down">
+                            <h2 id="formTitle" class="text-3xl sm:text-[36px] font-extrabold text-slate-900 tracking-tight leading-tight">Welcome back</h2>
+                            <p id="formSubtitle" class="text-sm text-slate-500 font-medium mt-3">Please enter your details to access your account.</p>
+                        </div>
+
+                        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+                            
+                            <div class="animate-slide-down" style="animation-delay: 100ms;">
+                                <label id="identifierLabel" class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Email or Phone</label>
+                                <div class="relative group">
+                                    <i id="identifierIcon" class="ph ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
+                                    <input type="text" id="identifierInput" required class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="e.g. john@example.com">
+                                    <span id="identifierError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
+                                        <i class="ph ph-warning-circle"></i> <span id="identifierErrorText">Invalid email</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="animate-slide-down" style="animation-delay: 150ms;">
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Password</label>
+                                <div class="relative group">
+                                    <i class="ph ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
+                                    <input type="password" id="passwordInput" required class="w-full pl-12 pr-12 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="••••••••">
+                                    <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-green-600 transition-colors outline-none focus:outline-none">
+                                        <i id="eyeIcon" class="ph ph-eye text-xl"></i>
+                                    </button>
+                                    <span id="passwordError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
+                                        <i class="ph ph-warning-circle"></i> <span>Password required</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2 animate-slide-down" style="animation-delay: 200ms;">
+                                <label class="flex items-center gap-2.5 cursor-pointer group">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-lg checked:bg-indigo-600 checked:border-indigo-600 transition-all cursor-pointer">
+                                        <i class="ph ph-check text-white absolute text-xs opacity-0 peer-checked:opacity-100 font-bold pointer-events-none transition-opacity"></i>
+                                    </div>
+                                    <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
+                                </label>
+                                <button type="button" id="forgotPasswordBtn" onclick="openForgotPasswordModal()" class="text-sm font-bold text-green-600 hover:text-green-800 hover:underline transition-all duration-200">Forgot password?</button>
+                            </div>
+
+                            <div class="pt-4 animate-slide-down" style="animation-delay: 250ms;">
+                                <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-[0_8px_24px_rgba(34,197,94,0.35)] hover:shadow-[0_12px_32px_rgba(34,197,94,0.4)] interactive-press flex justify-center items-center gap-2 text-base focus:outline-none focus:ring-4 focus:ring-green-300">
+                                    <span id="submitBtnText">Sign In Securely</span>
+                                    <i id="submitSpinner" class="ph ph-spinner-gap hidden text-lg"></i>
+                                    <i id="submitArrow" class="ph ph-arrow-right text-lg"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="customerFooter" class="mt-8 text-center border-t border-slate-200 pt-6 animate-slide-down" style="animation-delay: 300ms;">
+                            <p class="text-sm font-medium text-slate-600">Don't have an account? <a href="#" class="font-bold text-green-600 hover:text-green-800 transition-colors">Create account</a></p>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <!-- Overlay -->
         <div class="absolute inset-0 modal-overlay" onclick="closeForgotPasswordModal()"></div>
         
-        <!-- Modal Content -->
-        <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
-            <!-- Close Button -->
+        <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
             <button onclick="closeForgotPasswordModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-lg">
                 <i class="ph ph-x text-2xl"></i>
             </button>
 
-            <!-- Modal Title -->
             <div class="mb-8">
                 <div id="modalIcon" class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
                     <i class="ph ph-lock text-3xl text-green-600"></i>
@@ -269,7 +257,6 @@
                 <p id="modalDescription" class="text-sm text-slate-500 mt-2">Enter your email address and we'll send you a password reset link.</p>
             </div>
 
-            <!-- Reset Form -->
             <form id="resetForm" onsubmit="handlePasswordReset(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2">Email Address</label>
@@ -282,7 +269,6 @@
                     </span>
                 </div>
 
-                <!-- Form Message Area -->
                 <div id="resetMessage" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3">
                     <i class="ph ph-check-circle text-emerald-600 text-xl mt-0.5 flex-shrink-0"></i>
                     <div>
@@ -291,7 +277,6 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeForgotPasswordModal()" id="cancelResetBtn" class="flex-1 py-3 px-4 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-all interactive-press">Cancel</button>
                     <button type="submit" id="sendResetBtn" class="flex-1 py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-[0_4px_12px_rgba(34,197,94,0.3)] interactive-press flex items-center justify-center gap-2">
@@ -303,8 +288,7 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-50 border border-slate-700">
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-[60] border border-slate-700">
         <i id="toastIcon" class="ph ph-check-circle text-emerald-400 text-2xl"></i>
         <div>
             <h4 id="toastTitle" class="font-bold tracking-wide text-sm">Success</h4>
@@ -370,8 +354,8 @@
             const customerFooter = document.getElementById('customerFooter');
 
             if (mode === 'admin') {
-                // UI Changes for Admin
-                indicator.style.transform = 'translateX(100%)';
+                // Precise positioning for the indicator switch
+                indicator.style.left = 'calc(50% + 3px)'; 
                 btnAdmin.classList.replace('text-slate-500', 'text-indigo-600');
                 btnCustomer.classList.replace('text-indigo-600', 'text-slate-500');
 
@@ -389,8 +373,8 @@
                 document.getElementById('passwordInput').value = 'password123';
 
             } else {
-                // UI Changes for Customer
-                indicator.style.transform = 'translateX(0)';
+                // Revert to original position (Tailwind left-1.5 is 6px)
+                indicator.style.left = '6px';
                 btnCustomer.classList.replace('text-slate-500', 'text-indigo-600');
                 btnAdmin.classList.replace('text-indigo-600', 'text-slate-500');
 
