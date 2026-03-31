@@ -1,554 +1,587 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank of Zambia - Sign In</title>
+    <title>Bank of Zambia - Create Account</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        dark: {
+                            900: '#070B14',
+                            800: '#0D1322',
+                            700: '#151E32',
+                            card: 'rgba(13, 19, 34, 0.6)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         * { box-sizing: border-box; }
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
+            background-color: #070B14;
         }
+        
         .interactive-press:active { transform: scale(0.98); }
         
-        /* Smooth Fade In & Slide */
-        .animate-fade-in { animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-slide-down { animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        /* Slow, Elegant Animations */
+        .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .animate-slide-left { animation: slideLeft 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .animate-slide-right { animation: slideRight 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Floating Animation for Ambient Orbs */
-        .animate-float { animation: float 10s ease-in-out infinite; }
-        .animate-float-delayed { animation: float 12s ease-in-out 2s infinite; }
+        /* Ambient Floating Orbs */
+        .animate-float-slow { animation: float 14s ease-in-out infinite; }
+        .animate-float-slower { animation: float 18s ease-in-out 3s infinite; }
         
         @keyframes float {
-            0% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-20px) scale(1.05); }
-            100% { transform: translateY(0px) scale(1); }
+            0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
+            33% { transform: translateY(-30px) scale(1.05) rotate(2deg); }
+            66% { transform: translateY(15px) scale(0.95) rotate(-2deg); }
         }
 
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
+        .delay-150 { animation-delay: 150ms; }
+        .delay-300 { animation-delay: 300ms; }
 
-        /* Custom Background Patterns */
-        .bg-grid-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        /* Subtle Grid Pattern */
+        .bg-grid-dark {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 40px 40px;
         }
         
-        /* Premium Glassmorphism */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+        /* Deep Glassmorphism */
+        .glass-dark {
+            background: rgba(13, 19, 34, 0.5);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Modal Overlay */
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        /* Elegant Inputs */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #0D1322 inset !important;
+            -webkit-text-fill-color: white !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
 
-        /* Smooth Input Focus */
-        input:focus {
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        /* Elegant Dark Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px; 
         }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-        /* Hide scrollbar */
-        ::-webkit-scrollbar { display: none; }
+        /* Step Transitions */
+        .step-container { display: none; }
+        .step-container.active { display: block; }
 
-        /* Loading spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Error shake animation */
-        .shake {
-            animation: shake 0.4s;
-        }
-
+        .spinner { animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
         }
 
-        /* Success checkmark animation */
-        @keyframes successCheck {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
+        /* Custom Drag & Drop Zone */
+        .drop-zone {
+            transition: all 0.3s ease;
         }
-
-        .animate-success { animation: successCheck 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .drop-zone.dragover {
+            background: rgba(8, 145, 178, 0.1);
+            border-color: #06b6d4; /* cyan-500 */
+        }
     </style>
 </head>
-<body class="flex h-screen w-full bg-slate-50 overflow-hidden text-slate-800">
+<body class="flex h-screen w-full bg-dark-900 text-slate-200 overflow-hidden font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
 
-    <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-[#0B0F19] via-[#151b2b] to-[#0B0F19] relative overflow-hidden flex-col justify-between p-12 lg:p-16 shadow-2xl z-10">
-        <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-20"></div>
-        <div class="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-green-600/30 blur-[120px] animate-float"></div>
-        <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-emerald-600/20 blur-[100px] animate-float-delayed"></div>
+    <div class="hidden lg:flex w-[40%] relative overflow-hidden flex-col justify-between p-14 2xl:p-20 shadow-2xl z-10 border-r border-white/5">
+        <div class="absolute inset-0 bg-dark-900 z-0"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-900/20 via-dark-900 to-blue-900/20 z-0"></div>
+        <div class="absolute inset-0 bg-grid-dark z-0 mask-image:linear-gradient(to_bottom,transparent,black,transparent)"></div>
+        
+        <div class="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] rounded-full bg-cyan-600/20 blur-[120px] animate-float-slow z-0"></div>
 
-        <div class="relative z-10 flex items-center space-x-3 animate-fade-in">
-            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-12 h-12 rounded-2xl flex items-center justify-center font-bold shadow-lg shadow-green-500/40 text-white border border-white/20">
-                <i class="ph ph-bank text-3xl"></i>
+        <div class="relative z-10 flex items-center space-x-4 animate-fade-in">
+            <div class="bg-gradient-to-tr from-cyan-500 to-blue-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(8,145,178,0.3)] border border-white/20">
+                <i class="ph ph-bank text-2xl text-white"></i>
             </div>
-            <span class="text-3xl font-extrabold tracking-tight text-white">Bank of Zambia</span>
+            <div>
+                <span class="block text-2xl font-extrabold tracking-tight text-white leading-none">Bank of Zambia</span>
+            </div>
         </div>
 
-        <div class="relative z-10 animate-slide-up delay-100">
-            <h1 class="text-5xl xl:text-6xl font-extrabold text-white leading-[1.1] tracking-tight mb-6">
-                Secure Banking for <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-300">All Zambians.</span>
+        <div class="relative z-10 flex-1 flex flex-col justify-center mt-12 animate-slide-up delay-150">
+            <h1 class="text-4xl 2xl:text-5xl font-extrabold text-white leading-[1.1] tracking-tight mb-12">
+                Join the <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-sm">Digital Reserve.</span>
             </h1>
-            <p class="text-lg text-slate-300 font-medium max-w-md leading-relaxed">
-                Trusted financial services, secure transactions, comprehensive government account management, and advanced analytics—all in one platform.
-            </p>
             
-            <div class="flex items-center gap-5 mt-12 bg-white/5 w-fit p-3 pr-6 rounded-full border border-white/10 backdrop-blur-md hover:bg-white/8 transition-all">
-                <div class="flex -space-x-3">
-                    <img class="w-10 h-10 rounded-full border-2 border-[#0B0F19]" src="https://i.pravatar.cc/100?img=1" alt="User">
-                    <img class="w-10 h-10 rounded-full border-2 border-[#0B0F19]" src="https://i.pravatar.cc/100?img=2" alt="User">
-                    <img class="w-10 h-10 rounded-full border-2 border-[#0B0F19]" src="https://i.pravatar.cc/100?img=3" alt="User">
-                    <div class="w-10 h-10 rounded-full border-2 border-[#0B0F19] bg-slate-800 flex items-center justify-center text-xs font-bold text-white">+5M</div>
+            <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-cyan-500/20 before:via-slate-700 before:to-transparent">
+                
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" id="indicator-step-1">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-cyan-500 bg-dark-800 text-cyan-400 shadow-[0_0_15px_rgba(8,145,178,0.3)] shrink-0 z-10 transition-all duration-500 indicator-icon">
+                        <i class="ph-fill ph-user text-lg"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-6 md:ml-0 md:mr-6 md:text-right transition-all duration-500 indicator-text">
+                        <h4 class="text-base font-bold text-white">Credentials</h4>
+                        <p class="text-sm text-slate-400">Setup your login details</p>
+                    </div>
                 </div>
-                <p class="text-sm font-semibold text-slate-300">Millions trust BOZ.</p>
+
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group" id="indicator-step-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-700 bg-dark-900 text-slate-500 shrink-0 z-10 transition-all duration-500 indicator-icon">
+                        <i class="ph-fill ph-identification-card text-lg"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-6 md:ml-0 md:mr-6 md:text-right transition-all duration-500 indicator-text opacity-50">
+                        <h4 class="text-base font-bold text-slate-300">Personal Info</h4>
+                        <p class="text-sm text-slate-500">Your basic details</p>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group" id="indicator-step-3">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-700 bg-dark-900 text-slate-500 shrink-0 z-10 transition-all duration-500 indicator-icon">
+                        <i class="ph-fill ph-shield-check text-lg"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] ml-6 md:ml-0 md:mr-6 md:text-right transition-all duration-500 indicator-text opacity-50">
+                        <h4 class="text-base font-bold text-slate-300">KYC Verification</h4>
+                        <p class="text-sm text-slate-500">Secure identity check</p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="relative z-10 flex justify-between items-center text-sm font-semibold text-slate-500 animate-fade-in delay-200">
-            <p>&copy; 2026 Bank of Zambia</p>
-            <div class="flex gap-8">
-                <a href="#" class="hover:text-slate-300 transition-colors duration-300">Privacy</a>
-                <a href="#" class="hover:text-slate-300 transition-colors duration-300">Terms</a>
-            </div>
+        <div class="relative z-10 flex justify-between items-center text-sm font-semibold text-slate-500 animate-fade-in delay-300 mt-8">
+            <p>&copy; 2026 BOZ Network</p>
+            <a href="login.html" class="hover:text-cyan-400 transition-colors duration-300">Back to Login</a>
         </div>
     </div>
 
-    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col h-full">
+    <div class="w-full lg:w-[60%] relative bg-dark-900 flex flex-col h-full">
         
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-[100px] animate-float"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-300/20 rounded-full blur-[100px] animate-float-delayed"></div>
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] animate-float-slower"></div>
         </div>
 
         <div class="w-full h-full overflow-y-auto flex flex-col relative z-10">
             
-            <div class="lg:hidden px-8 pt-8 pb-4 flex items-center space-x-3 shrink-0 animate-fade-in">
-                <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg border border-white/20">
-                    <i class="ph ph-bank text-2xl"></i>
+            <div class="lg:hidden px-6 pt-8 pb-2 flex justify-between items-center shrink-0 animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-cyan-500 to-blue-600 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 border border-white/20">
+                        <i class="ph ph-bank text-2xl"></i>
+                    </div>
+                    <span class="text-2xl font-extrabold tracking-tight text-white">BOZ</span>
                 </div>
-                <span class="text-2xl font-extrabold tracking-tight text-slate-900">BOZ</span>
+                <div class="text-sm font-bold text-cyan-400" id="mobile-step-counter">Step 1 of 3</div>
             </div>
 
-            <div class="flex-1 flex flex-col justify-center px-6 py-8 sm:py-12 shrink-0">
-                <div class="w-full max-w-[480px] mx-auto animate-slide-up">
+            <div class="flex-1 flex flex-col justify-center px-4 py-8 sm:px-12 shrink-0">
+                <div class="w-full max-w-[540px] mx-auto animate-slide-up delay-150">
                     
-                    <div class="bg-slate-200/50 p-1.5 rounded-2xl flex relative mb-10 w-full shadow-inner border border-white/60 backdrop-blur-sm">
-                        <div id="tabIndicator" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 ease-out z-0"></div>
-                        
-                        <button id="btnCustomer" onclick="switchMode('customer')" class="relative z-10 flex-1 py-3 text-sm font-bold text-green-600 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
-                            <i class="ph ph-user text-lg"></i> <span class="hidden sm:inline">Customer</span>
-                        </button>
-                        <button id="btnAdmin" onclick="switchMode('admin')" class="relative z-10 flex-1 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors duration-300 interactive-press flex items-center justify-center gap-2 rounded-xl">
-                            <i class="ph ph-shield-check text-lg"></i> <span class="hidden sm:inline">Admin</span>
-                        </button>
-                    </div>
+                    <div class="glass-dark p-8 sm:p-12 rounded-3xl relative overflow-hidden" id="main-form-card">
+                        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
 
-                    <div class="glass-panel p-8 sm:p-10 rounded-3xl">
-                        <div class="mb-8 animate-slide-down">
-                            <h2 id="formTitle" class="text-3xl sm:text-[36px] font-extrabold text-slate-900 tracking-tight leading-tight">Welcome back</h2>
-                            <p id="formSubtitle" class="text-sm text-slate-500 font-medium mt-3">Please enter your details to access your account.</p>
+                        <div class="w-full h-1 bg-dark-800 rounded-full mb-8 overflow-hidden lg:hidden">
+                            <div id="mobile-progress-bar" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 w-1/3 transition-all duration-500"></div>
                         </div>
 
-                        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
-                            
-                            <div class="animate-slide-down" style="animation-delay: 100ms;">
-                                <label id="identifierLabel" class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Email or Phone</label>
-                                <div class="relative group">
-                                    <i id="identifierIcon" class="ph ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
-                                    <input type="text" id="identifierInput" required class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="e.g. john@example.com">
-                                    <span id="identifierError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
-                                        <i class="ph ph-warning-circle"></i> <span id="identifierErrorText">Invalid email</span>
-                                    </span>
-                                </div>
+                        <div id="step-1" class="step-container active animate-slide-left">
+                            <div class="mb-10">
+                                <h2 class="text-3xl font-extrabold text-white tracking-tight leading-tight">Create Account</h2>
+                                <p class="text-sm text-slate-400 font-medium mt-2">Set up your secure login credentials.</p>
                             </div>
 
-                            <div class="animate-slide-down" style="animation-delay: 150ms;">
-                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-3 ml-1">Password</label>
-                                <div class="relative group">
-                                    <i class="ph ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-green-600"></i>
-                                    <input type="password" id="passwordInput" required class="w-full pl-12 pr-12 py-3.5 bg-white border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)]" placeholder="••••••••">
-                                    <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-green-600 transition-colors outline-none focus:outline-none">
-                                        <i id="eyeIcon" class="ph ph-eye text-xl"></i>
-                                    </button>
-                                    <span id="passwordError" class="hidden text-xs text-red-500 font-bold mt-1 ml-1 flex items-center gap-1">
-                                        <i class="ph ph-warning-circle"></i> <span>Password required</span>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-between pt-2 animate-slide-down" style="animation-delay: 200ms;">
-                                <label class="flex items-center gap-2.5 cursor-pointer group">
-                                    <div class="relative flex items-center justify-center">
-                                        <input type="checkbox" class="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-lg checked:bg-indigo-600 checked:border-indigo-600 transition-all cursor-pointer">
-                                        <i class="ph ph-check text-white absolute text-xs opacity-0 peer-checked:opacity-100 font-bold pointer-events-none transition-opacity"></i>
+                            <form onsubmit="handleNext(event, 2)" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Email Address</label>
+                                        <div class="relative group">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <i class="ph ph-envelope-simple text-slate-500 text-xl transition-colors duration-300 group-focus-within:text-cyan-400"></i>
+                                            </div>
+                                            <input type="email" id="emailInput" required class="block w-full pl-12 pr-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="user@domain.com">
+                                        </div>
                                     </div>
-                                    <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
-                                </label>
-                                <button type="button" id="forgotPasswordBtn" onclick="openForgotPasswordModal()" class="text-sm font-bold text-green-600 hover:text-green-800 hover:underline transition-all duration-200">Forgot password?</button>
+
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Phone Number</label>
+                                        <div class="relative group flex">
+                                            <div class="bg-dark-800/80 border border-r-0 border-slate-700/80 rounded-l-xl px-4 flex items-center justify-center text-slate-400 font-semibold text-sm">
+                                                +260
+                                            </div>
+                                            <input type="tel" id="phoneInput" required class="block w-full pl-4 pr-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-r-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="97 123 4567">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Password</label>
+                                        <div class="relative group">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <i class="ph ph-lock-key text-slate-500 text-xl transition-colors duration-300 group-focus-within:text-cyan-400"></i>
+                                            </div>
+                                            <input type="password" id="passInput" required minlength="8" class="block w-full pl-12 pr-10 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="••••••••">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Confirm Password</label>
+                                        <div class="relative group">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <i class="ph ph-lock-key text-slate-500 text-xl transition-colors duration-300 group-focus-within:text-cyan-400"></i>
+                                            </div>
+                                            <input type="password" id="confirmPassInput" required class="block w-full pl-12 pr-10 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="••••••••">
+                                        </div>
+                                        <span id="passError" class="hidden text-[11px] text-rose-400 font-bold mt-1 ml-1 flex items-center gap-1">
+                                            <i class="ph-fill ph-warning-circle"></i> <span>Passwords do not match</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6">
+                                    <button type="submit" class="relative w-full py-4 overflow-hidden rounded-xl group interactive-press focus:outline-none">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 transition-transform duration-500 group-hover:scale-105"></div>
+                                        <div class="relative flex justify-center items-center gap-2 text-white font-bold text-base tracking-wide shadow-[0_0_20px_rgba(8,145,178,0.3)]">
+                                            <span>Continue</span>
+                                            <i class="ph-bold ph-arrow-right text-lg transition-transform duration-300 group-hover:translate-x-1"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="text-center mt-6">
+                                    <p class="text-sm text-slate-400">Already have an account? <a href="login.html" class="font-bold text-cyan-400 hover:text-cyan-300 transition-colors">Sign in</a></p>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step-2" class="step-container hidden">
+                            <div class="mb-10">
+                                <h2 class="text-3xl font-extrabold text-white tracking-tight leading-tight">Personal Details</h2>
+                                <p class="text-sm text-slate-400 font-medium mt-2">Enter your information exactly as it appears on your ID.</p>
                             </div>
 
-                            <div class="pt-4 animate-slide-down" style="animation-delay: 250ms;">
-                                <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-[0_8px_24px_rgba(34,197,94,0.35)] hover:shadow-[0_12px_32px_rgba(34,197,94,0.4)] interactive-press flex justify-center items-center gap-2 text-base focus:outline-none focus:ring-4 focus:ring-green-300">
-                                    <span id="submitBtnText">Sign In Securely</span>
-                                    <i id="submitSpinner" class="ph ph-spinner-gap hidden text-lg"></i>
-                                    <i id="submitArrow" class="ph ph-arrow-right text-lg"></i>
+                            <form onsubmit="handleNext(event, 3)" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">First Name</label>
+                                        <input type="text" required class="block w-full px-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="e.g. John">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Last Name</label>
+                                        <input type="text" required class="block w-full px-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="e.g. Doe">
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Date of Birth</label>
+                                        <div class="relative group">
+                                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                <i class="ph ph-calendar-blank text-slate-500 text-xl transition-colors duration-300 group-focus-within:text-cyan-400"></i>
+                                            </div>
+                                            <input type="date" required class="block w-full pl-12 pr-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300 [color-scheme:dark]">
+                                        </div>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Residential Address</label>
+                                        <div class="relative group">
+                                            <div class="absolute top-3.5 left-0 pl-4 flex items-center pointer-events-none">
+                                                <i class="ph ph-map-pin text-slate-500 text-xl transition-colors duration-300 group-focus-within:text-cyan-400"></i>
+                                            </div>
+                                            <textarea required rows="3" class="block w-full pl-12 pr-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300 resize-none" placeholder="Street name, City, Province"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" onclick="goToStep(1)" class="w-1/3 py-4 bg-dark-700 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-all interactive-press border border-slate-600/50 flex justify-center items-center">
+                                        Back
+                                    </button>
+                                    <button type="submit" class="relative w-2/3 py-4 overflow-hidden rounded-xl group interactive-press focus:outline-none">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 transition-transform duration-500 group-hover:scale-105"></div>
+                                        <div class="relative flex justify-center items-center gap-2 text-white font-bold text-base tracking-wide shadow-[0_0_20px_rgba(8,145,178,0.3)]">
+                                            <span>Continue to KYC</span>
+                                            <i class="ph-bold ph-arrow-right text-lg transition-transform duration-300 group-hover:translate-x-1"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step-3" class="step-container hidden">
+                            <div class="mb-10">
+                                <h2 class="text-3xl font-extrabold text-white tracking-tight leading-tight">Identity Verification</h2>
+                                <p class="text-sm text-slate-400 font-medium mt-2">Upload a government-issued ID to secure your account.</p>
+                            </div>
+
+                            <form onsubmit="handleFinalSubmit(event)" class="space-y-6">
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Document Type</label>
+                                    <div class="relative group">
+                                        <select required class="block w-full px-4 py-4 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300 appearance-none cursor-pointer">
+                                            <option value="" disabled selected>Select ID Type</option>
+                                            <option value="national_id">National Registration Card (NRC)</option>
+                                            <option value="passport">Passport</option>
+                                            <option value="driving_license">Driving License</option>
+                                        </select>
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                            <i class="ph-bold ph-caret-down text-slate-500 text-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Document Number</label>
+                                    <input type="text" required class="block w-full px-4 py-3.5 bg-dark-800/80 border border-slate-700/80 rounded-xl text-sm font-semibold text-white placeholder:text-slate-600 focus:bg-dark-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 focus:outline-none transition-all duration-300" placeholder="e.g. 123456/78/9">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 ml-1">Upload Document (Front)</label>
+                                    <div id="drop-zone" class="drop-zone border-2 border-dashed border-slate-600 rounded-xl bg-dark-800/50 p-8 text-center cursor-pointer hover:border-cyan-500 hover:bg-dark-800 group relative overflow-hidden" onclick="document.getElementById('file-upload').click()">
+                                        <input type="file" id="file-upload" class="hidden" accept="image/jpeg, image/png, application/pdf" required onchange="handleFileSelect(event)">
+                                        
+                                        <div id="upload-content" class="flex flex-col items-center justify-center space-y-3">
+                                            <div class="w-12 h-12 bg-dark-700 rounded-full flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform duration-300">
+                                                <i class="ph-bold ph-upload-simple text-2xl"></i>
+                                            </div>
+                                            <div class="text-sm font-bold text-white">Click to upload or drag and drop</div>
+                                            <div class="text-xs text-slate-500 font-medium">PNG, JPG or PDF (max. 5MB)</div>
+                                        </div>
+                                        
+                                        <div id="file-preview" class="hidden flex flex-col items-center justify-center">
+                                            <i class="ph-fill ph-file-image text-4xl text-cyan-400 mb-2"></i>
+                                            <span id="file-name" class="text-sm font-bold text-white truncate max-w-[200px]">filename.jpg</span>
+                                            <span class="text-xs text-cyan-500 font-medium mt-1 hover:underline" onclick="event.stopPropagation(); document.getElementById('file-upload').value=''; document.getElementById('upload-content').classList.remove('hidden'); document.getElementById('file-preview').classList.add('hidden');">Change file</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-4 pt-4">
+                                    <button type="button" onclick="goToStep(2)" class="w-1/3 py-4 bg-dark-700 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-all interactive-press border border-slate-600/50 flex justify-center items-center">
+                                        Back
+                                    </button>
+                                    <button type="submit" id="finalSubmitBtn" class="relative w-2/3 py-4 overflow-hidden rounded-xl group interactive-press focus:outline-none">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 transition-transform duration-500 group-hover:scale-105"></div>
+                                        <div class="relative flex justify-center items-center gap-2 text-white font-bold text-base tracking-wide shadow-[0_0_20px_rgba(8,145,178,0.3)]">
+                                            <span id="finalSubmitText">Submit Verification</span>
+                                            <i id="finalSpinner" class="ph ph-spinner-gap spinner hidden text-xl"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step-4" class="step-container hidden">
+                            <div class="flex flex-col items-center justify-center text-center py-8">
+                                <div class="w-24 h-24 bg-cyan-500/10 border-2 border-cyan-500/20 rounded-full flex items-center justify-center mb-8 relative">
+                                    <div class="absolute inset-0 bg-cyan-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                                    <i class="ph-fill ph-check-circle text-5xl text-cyan-400 z-10"></i>
+                                </div>
+                                <h2 class="text-3xl font-extrabold text-white tracking-tight leading-tight mb-3">Application Received</h2>
+                                <p class="text-slate-400 font-medium max-w-sm mb-10 leading-relaxed">
+                                    Your account details and KYC documents have been securely transmitted. You will receive an email once verification is complete.
+                                </p>
+                                <button type="button" onclick="window.location.href='login.html'" class="relative w-full py-4 overflow-hidden rounded-xl group interactive-press focus:outline-none max-w-xs mx-auto">
+                                    <div class="absolute inset-0 bg-dark-700 transition-colors duration-300 group-hover:bg-dark-800 border border-slate-600/50"></div>
+                                    <div class="relative flex justify-center items-center gap-2 text-white font-bold text-base tracking-wide">
+                                        <span>Return to Login</span>
+                                    </div>
                                 </button>
                             </div>
-                        </form>
-
-                        <div id="customerFooter" class="mt-8 text-center border-t border-slate-200 pt-6 animate-slide-down" style="animation-delay: 300ms;">
-                            <p class="text-sm font-medium text-slate-600">Don't have an account? <a href="#" class="font-bold text-green-600 hover:text-green-800 transition-colors">Create account</a></p>
                         </div>
+
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="absolute inset-0 modal-overlay" onclick="closeForgotPasswordModal()"></div>
-        
-        <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
-            <button onclick="closeForgotPasswordModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-lg">
-                <i class="ph ph-x text-2xl"></i>
-            </button>
-
-            <div class="mb-8">
-                <div id="modalIcon" class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
-                    <i class="ph ph-lock text-3xl text-green-600"></i>
-                </div>
-                <h3 id="modalTitle" class="text-2xl font-bold text-slate-900">Reset Password</h3>
-                <p id="modalDescription" class="text-sm text-slate-500 mt-2">Enter your email address and we'll send you a password reset link.</p>
-            </div>
-
-            <form id="resetForm" onsubmit="handlePasswordReset(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-widest mb-2">Email Address</label>
-                    <div class="relative group">
-                        <i class="ph ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-green-600"></i>
-                        <input type="email" id="resetEmailInput" required class="w-full pl-12 pr-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-green-500 focus:outline-none transition-all" placeholder="your@email.com">
-                    </div>
-                    <span id="resetEmailError" class="hidden text-xs text-red-500 font-bold mt-2 ml-1 flex items-center gap-1">
-                        <i class="ph ph-warning-circle"></i> <span>Please enter a valid email</span>
-                    </span>
-                </div>
-
-                <div id="resetMessage" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3">
-                    <i class="ph ph-check-circle text-emerald-600 text-xl mt-0.5 flex-shrink-0"></i>
-                    <div>
-                        <p class="text-sm font-bold text-emerald-900">Check your email!</p>
-                        <p class="text-xs text-emerald-700 mt-1">We've sent a password reset link to your email address.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="closeForgotPasswordModal()" id="cancelResetBtn" class="flex-1 py-3 px-4 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-all interactive-press">Cancel</button>
-                    <button type="submit" id="sendResetBtn" class="flex-1 py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-[0_4px_12px_rgba(34,197,94,0.3)] interactive-press flex items-center justify-center gap-2">
-                        <span id="sendResetBtnText">Send Reset Link</span>
-                        <i id="resetSpinner" class="ph ph-spinner-gap hidden text-lg"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-[60] border border-slate-700">
-        <i id="toastIcon" class="ph ph-check-circle text-emerald-400 text-2xl"></i>
-        <div>
-            <h4 id="toastTitle" class="font-bold tracking-wide text-sm">Success</h4>
-            <p id="toastMessage" class="text-slate-400 text-xs font-medium mt-0.5">Action completed.</p>
         </div>
     </div>
 
     <script>
-        let currentMode = 'customer';
+        // Form Navigation Logic
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(el => {
+                el.classList.remove('active', 'animate-slide-left', 'animate-slide-right');
+                el.classList.add('hidden');
+            });
 
-        // --- 1. FORM VALIDATION ---
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
+            // Show target step
+            const target = document.getElementById(`step-${step}`);
+            target.classList.remove('hidden');
+            target.classList.add('active', 'animate-slide-left'); // Assuming forward motion generally, refine if needed
 
-        function validateForm() {
-            const identifier = document.getElementById('identifierInput').value.trim();
-            const password = document.getElementById('passwordInput').value;
-            let isValid = true;
-
-            // Validate identifier
-            document.getElementById('identifierError').classList.add('hidden');
-            if (!identifier) {
-                document.getElementById('identifierErrorText').innerText = 'Email or phone number required';
-                document.getElementById('identifierError').classList.remove('hidden');
-                isValid = false;
-            } else if (!validateEmail(identifier) && !/^\+?[1-9]\d{1,14}$/.test(identifier.replace(/\D/g, ''))) {
-                document.getElementById('identifierErrorText').innerText = 'Invalid email or phone number';
-                document.getElementById('identifierError').classList.remove('hidden');
-                isValid = false;
-            }
-
-            // Validate password
-            document.getElementById('passwordError').classList.add('hidden');
-            if (!password) {
-                document.getElementById('passwordError').classList.remove('hidden');
-                isValid = false;
-            } else if (password.length < 6) {
-                document.getElementById('passwordError').querySelector('span').innerText = 'Password must be at least 6 characters';
-                document.getElementById('passwordError').classList.remove('hidden');
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        // --- 2. TOGGLE LOGIC (CUSTOMER VS ADMIN) ---
-        function switchMode(mode) {
-            if (currentMode === mode) return;
-            currentMode = mode;
-
-            const indicator = document.getElementById('tabIndicator');
-            const btnCustomer = document.getElementById('btnCustomer');
-            const btnAdmin = document.getElementById('btnAdmin');
-            
-            const title = document.getElementById('formTitle');
-            const subtitle = document.getElementById('formSubtitle');
-            const identifierLabel = document.getElementById('identifierLabel');
-            const identifierIcon = document.getElementById('identifierIcon');
-            const identifierInput = document.getElementById('identifierInput');
-            const submitBtnText = document.getElementById('submitBtnText');
-            const customerFooter = document.getElementById('customerFooter');
-
-            if (mode === 'admin') {
-                // Precise positioning for the indicator switch
-                indicator.style.left = 'calc(50% + 3px)'; 
-                btnAdmin.classList.replace('text-slate-500', 'text-indigo-600');
-                btnCustomer.classList.replace('text-indigo-600', 'text-slate-500');
-
-                // Content Changes
-                title.innerText = "Admin Access";
-                subtitle.innerText = "Access the Nexus admin control panel.";
-                identifierLabel.innerText = "Staff ID or Email";
-                identifierInput.placeholder = "e.g. EMP-001 or admin@nexus.com";
-                identifierIcon.className = "ph ph-identification-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-indigo-600";
-                submitBtnText.innerText = "Authenticate";
-                customerFooter.classList.add('hidden'); 
+            // Update Desktop Progress Tracker
+            for(let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`indicator-step-${i}`);
+                if (!indicator) continue;
                 
-                // Demo data
-                identifierInput.value = 'admin@nexus.com'; 
-                document.getElementById('passwordInput').value = 'password123';
+                const icon = indicator.querySelector('.indicator-icon');
+                const text = indicator.querySelector('.indicator-text');
 
+                if (i < step) {
+                    // Completed
+                    icon.className = "flex items-center justify-center w-10 h-10 rounded-full border-2 border-cyan-500 bg-cyan-500/20 text-cyan-400 shrink-0 z-10 transition-all duration-500 indicator-icon";
+                    icon.innerHTML = '<i class="ph-bold ph-check text-lg"></i>';
+                    text.classList.remove('opacity-50');
+                } else if (i === step) {
+                    // Current
+                    icon.className = "flex items-center justify-center w-10 h-10 rounded-full border-2 border-cyan-500 bg-dark-800 text-cyan-400 shadow-[0_0_15px_rgba(8,145,178,0.3)] shrink-0 z-10 transition-all duration-500 indicator-icon";
+                    // Restore original icons based on step
+                    if(i===1) icon.innerHTML = '<i class="ph-fill ph-user text-lg"></i>';
+                    if(i===2) icon.innerHTML = '<i class="ph-fill ph-identification-card text-lg"></i>';
+                    if(i===3) icon.innerHTML = '<i class="ph-fill ph-shield-check text-lg"></i>';
+                    
+                    text.classList.remove('opacity-50');
+                    text.querySelector('h4').className = "text-base font-bold text-white";
+                } else {
+                    // Upcoming
+                    icon.className = "flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-700 bg-dark-900 text-slate-500 shrink-0 z-10 transition-all duration-500 indicator-icon";
+                    if(i===2) icon.innerHTML = '<i class="ph-fill ph-identification-card text-lg"></i>';
+                    if(i===3) icon.innerHTML = '<i class="ph-fill ph-shield-check text-lg"></i>';
+                    text.classList.add('opacity-50');
+                    text.querySelector('h4').className = "text-base font-bold text-slate-300";
+                }
+            }
+
+            // Update Mobile Trackers
+            if (step <= 3) {
+                document.getElementById('mobile-step-counter').innerText = `Step ${step} of 3`;
+                const progressWidths = ['w-1/3', 'w-2/3', 'w-full'];
+                const pb = document.getElementById('mobile-progress-bar');
+                pb.className = `h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500 ${progressWidths[step-1]}`;
             } else {
-                // Revert to original position (Tailwind left-1.5 is 6px)
-                indicator.style.left = '6px';
-                btnCustomer.classList.replace('text-slate-500', 'text-indigo-600');
-                btnAdmin.classList.replace('text-indigo-600', 'text-slate-500');
-
-                // Content Changes
-                title.innerText = "Welcome back";
-                subtitle.innerText = "Please enter your details to access your account.";
-                identifierLabel.innerText = "Email or Phone";
-                identifierInput.placeholder = "e.g. john@example.com";
-                identifierIcon.className = "ph ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl transition-colors group-focus-within:text-indigo-600";
-                submitBtnText.innerText = "Sign In Securely";
-                customerFooter.classList.remove('hidden');
-
-                // Clear inputs
-                identifierInput.value = ''; 
-                document.getElementById('passwordInput').value = '';
+                // Success step formatting
+                document.getElementById('mobile-step-counter').style.display = 'none';
+                document.getElementById('mobile-progress-bar').parentElement.style.display = 'none';
             }
         }
 
-        // --- 3. PASSWORD TOGGLE ---
-        function togglePassword() {
-            const passInput = document.getElementById('passwordInput');
-            const eyeIcon = document.getElementById('eyeIcon');
-            
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.classList.replace('ph-eye', 'ph-eye-slash');
-            } else {
-                passInput.type = 'password';
-                eyeIcon.classList.replace('ph-eye-slash', 'ph-eye');
-            }
-        }
-
-        // --- 4. FORGOT PASSWORD MODAL ---
-        function openForgotPasswordModal() {
-            const modal = document.getElementById('forgotPasswordModal');
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeForgotPasswordModal() {
-            const modal = document.getElementById('forgotPasswordModal');
-            const resetForm = document.getElementById('resetForm');
-            const resetMessage = document.getElementById('resetMessage');
-            
-            // Reset form state
-            resetForm.classList.remove('hidden');
-            resetMessage.classList.add('hidden');
-            document.getElementById('resetEmailInput').value = '';
-            document.getElementById('resetEmailError').classList.add('hidden');
-            document.getElementById('sendResetBtnText').innerText = 'Send Reset Link';
-            document.getElementById('resetSpinner').classList.add('hidden');
-            document.getElementById('cancelResetBtn').disabled = false;
-            document.getElementById('sendResetBtn').disabled = false;
-            
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // --- 5. PASSWORD RESET HANDLER ---
-        function handlePasswordReset(e) {
+        // Validate Step 1 Passwords
+        function handleNext(e, nextStepId) {
             e.preventDefault();
-
-            const email = document.getElementById('resetEmailInput').value.trim();
-            const errorSpan = document.getElementById('resetEmailError');
             
-            // Validate email
-            if (!validateEmail(email)) {
-                errorSpan.classList.remove('hidden');
-                document.getElementById('resetEmailInput').classList.add('shake');
-                setTimeout(() => {
-                    document.getElementById('resetEmailInput').classList.remove('shake');
-                }, 400);
+            if (nextStepId === 2) {
+                const pass = document.getElementById('passInput').value;
+                const confirm = document.getElementById('confirmPassInput').value;
+                const error = document.getElementById('passError');
+
+                if (pass !== confirm) {
+                    error.classList.remove('hidden');
+                    document.getElementById('confirmPassInput').classList.add('border-rose-500/50');
+                    shakeCard();
+                    return;
+                } else {
+                    error.classList.add('hidden');
+                    document.getElementById('confirmPassInput').classList.remove('border-rose-500/50');
+                }
+            }
+
+            goToStep(nextStepId);
+        }
+
+        // Final Submit Logic
+        function handleFinalSubmit(e) {
+            e.preventDefault();
+            
+            // Check if file is selected
+            const fileInput = document.getElementById('file-upload');
+            if (fileInput.files.length === 0) {
+                document.getElementById('drop-zone').classList.add('border-rose-500');
+                shakeCard();
                 return;
             }
 
-            errorSpan.classList.add('hidden');
+            const btnText = document.getElementById('finalSubmitText');
+            const spinner = document.getElementById('finalSpinner');
+            const btn = document.getElementById('finalSubmitBtn');
 
-            // Simulate sending reset email
-            const sendBtn = document.getElementById('sendResetBtn');
-            const spinner = document.getElementById('resetSpinner');
-            const btnText = document.getElementById('sendResetBtnText');
-            const cancelBtn = document.getElementById('cancelResetBtn');
-
-            btnText.innerText = 'Sending...';
+            btnText.innerText = "Encrypting Data...";
             spinner.classList.remove('hidden');
-            sendBtn.disabled = true;
-            cancelBtn.disabled = true;
-
-            setTimeout(() => {
-                // Show success message
-                document.getElementById('resetForm').classList.add('hidden');
-                document.getElementById('resetMessage').classList.remove('hidden');
-                
-                btnText.innerText = 'Sent!';
-                spinner.classList.add('hidden');
-                
-                // Auto close modal after 3 seconds
-                setTimeout(() => {
-                    closeForgotPasswordModal();
-                    showToast('Reset Link Sent', 'Check your email for the password reset link.', 'ph-check-circle', 'text-emerald-400');
-                }, 2000);
-            }, 1500);
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('forgotPasswordModal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeForgotPasswordModal();
-            }
-        });
-
-        // --- 6. LOGIN HANDLER & REDIRECTION ---
-        function handleLogin(e) {
-            e.preventDefault();
-
-            // Validate form first
-            if (!validateForm()) {
-                showToast('Validation Failed', 'Please check your input fields.', 'ph-warning-circle', 'text-amber-400');
-                return;
-            }
-
-            const btn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('submitBtnText');
-            const spinner = document.getElementById('submitSpinner');
-            const arrow = document.getElementById('submitArrow');
-
-            // Button Loading State
-            btnText.innerText = "Authenticating...";
-            spinner.classList.remove('hidden');
-            arrow.classList.add('hidden');
-            btn.classList.add('opacity-75');
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
             btn.disabled = true;
 
-            // Simulate Network Request
+            // Simulate API call
             setTimeout(() => {
-                if (currentMode === 'admin') {
-                    // Redirect to the Admin Dashboard
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    // Show Toast and redirect to Customer Dashboard
-                    showToast('Login Successful', 'Redirecting to your dashboard...', 'ph-check-circle', 'text-emerald-400');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }
-            }, 1200);
+                goToStep(4);
+            }, 2000);
         }
 
-        // --- 7. TOAST UTILITY ---
-        function showToast(title, msg, icon='ph-check-circle', color='text-emerald-400') {
-            const t = document.getElementById('toast'); 
-            document.getElementById('toastTitle').innerText = title; 
-            document.getElementById('toastMessage').innerText = msg;
-            document.getElementById('toastIcon').className = `ph ${icon} ${color} text-2xl`;
-            
-            t.classList.remove('hidden'); 
-            setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
-            
-            setTimeout(() => { 
-                t.classList.add('translate-y-10', 'opacity-0'); 
-                setTimeout(() => t.classList.add('hidden'), 300); 
-            }, 4000);
+        function shakeCard() {
+            const card = document.getElementById('main-form-card');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
         }
 
-        // Initialize
-        window.addEventListener('load', () => {
-            document.getElementById('identifierInput').addEventListener('input', () => {
-                document.getElementById('identifierError').classList.add('hidden');
-            });
-            document.getElementById('passwordInput').addEventListener('input', () => {
-                document.getElementById('passwordError').classList.add('hidden');
-            });
+        // File Drag & Drop Logic
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-upload');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
         });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            fileInput.files = files;
+            updateFilePreview();
+        }, false);
+
+        function handleFileSelect(e) {
+            updateFilePreview();
+        }
+
+        function updateFilePreview() {
+            if(fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                document.getElementById('upload-content').classList.add('hidden');
+                document.getElementById('file-preview').classList.remove('hidden');
+                document.getElementById('file-name').innerText = fileName;
+                dropZone.classList.remove('border-rose-500');
+            }
+        }
     </script>
 </body>
 </html>
