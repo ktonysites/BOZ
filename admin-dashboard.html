@@ -36,60 +36,84 @@
 </head>
 <body class="flex h-screen overflow-hidden text-slate-800 bg-slate-50" onclick="closeAllDropdowns(event)">
 
-    <!-- Mobile Header -->
-    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-40 flex items-center justify-between px-4 shadow-sm">
+    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center justify-between px-4 shadow-sm">
         <div class="flex items-center space-x-2">
-            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg">Z</div>
+            <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-lg">
+                <i class="ph ph-bank"></i>
+            </div>
             <span class="text-sm font-bold text-slate-800">BOZ Admin</span>
         </div>
-        <div class="flex items-center space-x-4">
-            <button class="relative p-2">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300">
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMobileMenu()" class="hamburger-icon p-2 transition-transform duration-300 hover:bg-slate-100 rounded-lg">
+                <i class="ph ph-list text-2xl text-slate-700"></i>
             </button>
         </div>
     </header>
 
-    <!-- Mobile Backdrop -->
-    <div id="mobileBackdrop" class="md:hidden fixed inset-0 bg-black/50 z-30 hidden transition-opacity duration-300"></div>
+    <div id="mobileBackdrop" onclick="closeMobileMenu()" class="md:hidden fixed inset-0 bg-slate-900/60 z-40 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm"></div>
 
-    <!-- Mobile Sidebar -->
-    <aside id="mobileSidebar" class="md:hidden fixed left-0 top-0 w-64 h-screen bg-slate-900 text-slate-300 flex flex-col z-40 shadow-xl overflow-y-auto pt-20" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-        <div class="p-6 flex items-center space-x-3 text-white border-b border-slate-800">
-            <div class="bg-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center font-bold">Z</div>
-            <span class="text-xl font-bold tracking-wide">BOZ Admin</span>
+    <aside id="mobileSidebar" class="md:hidden fixed left-0 top-0 w-72 h-screen bg-[#0B0F19] text-slate-300 flex flex-col z-50 shadow-2xl overflow-y-auto" style="transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="p-6 flex items-center justify-between text-white border-b border-slate-800 bg-slate-900/50">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-green-600 to-emerald-500 w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-green-500/30 text-white border border-white/20">
+                    <i class="ph ph-bank text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-wide block leading-none text-white">BOZ</span>
+                    <span class="text-[10px] text-emerald-400 font-mono tracking-widest uppercase font-semibold">Admin Portal</span>
+                </div>
+            </div>
+            <button onclick="closeMobileMenu()" class="p-2 bg-slate-800 text-slate-400 hover:text-white rounded-lg transition">
+                <i class="ph ph-x text-lg font-bold"></i>
+            </button>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 mt-4">
-            <a href="admin-dashboard.html" class="nav-link nav-link-active flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-600/10 text-indigo-400 border border-indigo-600/20 transition interactive-press">
-                <i class="ph-fill ph-squares-four text-xl"></i>
-                <span class="text-sm font-bold">Dashboard</span>
-            </a>
-            <a href="service-channels.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-sliders text-xl"></i>
-                <span class="text-sm font-semibold">Channels</span>
-            </a>
-            <a href="users.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-users text-xl"></i>
-                <span class="text-sm font-semibold">Users</span>
-            </a>
-            <a href="analytics.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition interactive-press">
-                <i class="ph ph-chart-line-up text-xl"></i>
-                <span class="text-sm font-semibold">Analytics</span>
-            </a>
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-6">
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Dashboard</p>
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
+                    <i class="ph-fill ph-squares-four text-xl"></i>
+                    <span class="text-sm">Overview</span>
+                </a>
+                <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition interactive-press mb-1">
+                    <i class="ph ph-sliders text-xl"></i>
+                    <span class="text-sm font-semibold">Service Channels</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Banking Core</p>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-users text-xl"></i>
+                    <span class="text-sm font-medium">User Accounts</span>
+                </a>
+                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-hand-coins text-xl"></i>
+                    <span class="text-sm font-medium">Loan Book</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Operations & Govt</p>
+                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-money text-xl"></i>
+                    <span class="text-sm font-medium">Payroll Engine</span>
+                </a>
+                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-bank text-xl"></i>
+                    <span class="text-sm font-medium">Govt Accounts</span>
+                </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition interactive-press mb-1">
+                    <i class="ph ph-chart-line text-xl"></i>
+                    <span class="text-sm font-medium">Analytics</span>
+                </a>
+            </div>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-slate-800">
-            <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-900/20 hover:text-red-400 transition text-slate-400">
+        <div class="p-4 mt-auto border-t border-slate-800 bg-slate-900/50">
+            <a href="login.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-400 interactive-press">
                 <i class="ph ph-sign-out text-xl"></i>
-                <span class="font-medium">Sign Out</span>
+                <span class="font-medium text-sm">Sign Out</span>
             </a>
         </div>
     </aside>
@@ -110,8 +134,8 @@
         <div class="flex-1 overflow-y-auto py-6 px-4 space-y-8">
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Dashboard</p>
-                <a href="admin-dashboard.html" class="nav-link active-nav flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
-                    <i class="ph ph-squares-four text-xl"></i>
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-semibold transition interactive-press mb-1 border-l-2 border-indigo-500">
+                    <i class="ph-fill ph-squares-four text-xl"></i>
                     <span class="text-sm">Overview</span>
                 </a>
                   <a href="service-channels.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 transition-all group interactive-press mb-1">
@@ -122,11 +146,11 @@
 
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Banking Core</p>
-                <a href="users.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-users text-xl"></i>
                     <span class="font-medium text-sm">User Accounts</span>
                 </a>
-                <a href="loans.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="loans.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-hand-coins text-xl"></i>
                     <span class="font-medium text-sm">Loan Book</span>
                 </a>
@@ -134,11 +158,11 @@
 
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Internal Operations</p>
-                <a href="staff.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="staff.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-identification-badge text-xl"></i>
                     <span class="font-medium text-sm">Staff Directory</span>
                 </a>
-                <a href="payroll.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="payroll.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-money text-xl"></i>
                     <span class="font-medium text-sm">Payroll Engine</span>
                 </a>
@@ -146,7 +170,7 @@
 
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Government</p>
-                <a href="government-accounts.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="government-accounts.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-bank text-xl"></i>
                     <span class="font-medium text-sm">Government Accounts</span>
                 </a>
@@ -154,7 +178,7 @@
 
             <div>
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Intelligence</p>
-                <a href="analytics.html" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-slate-200 transition interactive-press mb-1">
                     <i class="ph ph-chart-line text-xl"></i>
                     <span class="font-medium text-sm">Analytics & Reports</span>
                 </a>
@@ -162,7 +186,7 @@
         </div>
 
         <div class="p-4 border-t border-slate-800 bg-[#0B0F19]">
-            <a href="#" onclick="showToast('Logging out...', 'Session terminated.', 'ph-sign-out', 'text-red-400')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-500 font-medium interactive-press">
+            <a href="login.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 hover:text-red-400 transition text-slate-500 font-medium interactive-press">
                 <i class="ph ph-sign-out text-xl"></i>
                 <span class="text-sm">Sign Out</span>
             </a>
@@ -171,19 +195,19 @@
 
     <main class="flex-1 flex flex-col overflow-y-auto relative md:pt-0 pt-16 pb-20 md:pb-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNCkiLz48L3N2Zz4=')]" >
         
-        <header class="bg-glass border-b border-slate-200/80 px-8 py-5 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+        <header class="bg-glass border-b border-slate-200/80 px-4 md:px-8 py-4 flex justify-between items-center sticky top-0 z-20 shadow-sm">
             <div>
-                <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">System Overview</h2>
-                <p class="text-sm text-slate-500 font-medium mt-0.5">Live platform monitoring and configuration.</p>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">System Overview</h2>
+                <p class="text-xs md:text-sm text-slate-500 font-medium mt-0.5 hidden sm:block">Live platform monitoring and configuration.</p>
             </div>
             
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-3 md:space-x-6">
                 <div class="relative">
                     <button id="notifBtn" onclick="toggleNotifications(event)" class="text-slate-500 hover:text-indigo-600 transition relative p-2.5 bg-white rounded-full shadow-sm border border-slate-200 interactive-press">
-                        <i class="ph ph-bell text-xl font-bold"></i>
+                        <i class="ph ph-bell text-lg md:text-xl font-bold"></i>
                         <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-amber-500 rounded-full border-2 border-white"></span>
                     </button>
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-[calc(100vw-2rem)] sm:w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
                         <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                             <h3 class="font-bold text-slate-800 text-sm">System Alerts</h3>
                             <button class="text-xs text-indigo-600 font-bold hover:text-indigo-800">Dismiss all</button>
@@ -203,16 +227,16 @@
                     </div>
                 </div>
 
-                <div class="relative border-l border-slate-200 pl-6">
-                    <div id="profileBtn" onclick="toggleProfile(event)" class="flex items-center space-x-3 cursor-pointer group interactive-press bg-white border border-slate-200 pl-2 pr-4 py-1.5 rounded-full shadow-sm hover:border-indigo-300 transition">
-                        <img src="https://ui-avatars.com/api/?name=Super+Admin&background=4f46e5&color=fff&bold=true" alt="Admin" class="w-8 h-8 rounded-full shadow-sm">
+                <div class="relative border-l border-slate-200 pl-3 md:pl-6">
+                    <div id="profileBtn" onclick="toggleProfile(event)" class="flex items-center space-x-3 cursor-pointer group interactive-press bg-white border border-slate-200 p-1 md:pl-2 md:pr-4 md:py-1.5 rounded-full shadow-sm hover:border-indigo-300 transition">
+                        <img src="https://ui-avatars.com/api/?name=Super+Admin&background=4f46e5&color=fff&bold=true" alt="Admin" class="w-8 h-8 md:w-8 md:h-8 rounded-full shadow-sm">
                         <div class="hidden md:block text-left">
                             <p class="text-xs font-bold text-slate-700 leading-tight">Sarah Jenkins</p>
                             <p class="text-[10px] text-slate-500 font-medium">Head of Ops</p>
                         </div>
-                        <i class="ph ph-caret-down text-slate-400 font-bold group-hover:text-indigo-500 transition"></i>
+                        <i class="ph ph-caret-down text-slate-400 font-bold group-hover:text-indigo-500 transition hidden md:block"></i>
                     </div>
-                    <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-[calc(100vw-2rem)] sm:w-56 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden transform transition-all opacity-0 scale-95 origin-top-right z-50">
                         <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
                             <img src="https://ui-avatars.com/api/?name=Super+Admin&background=4f46e5&color=fff&bold=true" class="w-10 h-10 rounded-full">
                             <div>
@@ -228,7 +252,7 @@
                                 <i class="ph ph-shield-check text-lg"></i> Security Settings
                             </a>
                             <div class="h-px bg-slate-100 my-1"></div>
-                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
+                            <a href="login.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
                                 <i class="ph ph-sign-out text-lg"></i> Sign Out
                             </a>
                         </div>
@@ -237,121 +261,121 @@
             </div>
         </header>
 
-        <div class="p-8 max-w-[1600px] mx-auto w-full pb-24">
+        <div class="p-4 md:p-8 max-w-[1600px] mx-auto w-full pb-24">
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 opacity-0 animate-fade-in-up">
-                <div onclick="openDetailsModal('volume')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 opacity-0 animate-fade-in-up">
+                <div onclick="openDetailsModal('volume')" class="bg-white rounded-2xl p-5 md:p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                     <div class="flex justify-between items-start mb-4 relative">
-                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Gross Volume (24h)</p>
-                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="ph ph-chart-line-up text-xl font-bold"></i></div>
+                        <p class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">Gross Volume (24h)</p>
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="ph ph-chart-line-up text-lg md:text-xl font-bold"></i></div>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">KES 45.2M</h3>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight mt-1">KES 45.2M</h3>
                     <div class="flex items-center justify-between mt-3">
-                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md flex items-center gap-1"><i class="ph ph-trend-up"></i> 12.5%</span>
+                        <span class="text-[10px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 md:px-2.5 rounded-md flex items-center gap-1"><i class="ph ph-trend-up"></i> 12.5%</span>
                         <span class="text-[10px] text-slate-400 font-semibold group-hover:text-indigo-500 transition flex items-center gap-1">View details <i class="ph ph-arrow-right"></i></span>
                     </div>
                 </div>
                 
-                <div onclick="openDetailsModal('vcards')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-100">
+                <div onclick="openDetailsModal('vcards')" class="bg-white rounded-2xl p-5 md:p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-100">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                     <div class="flex justify-between items-start mb-4 relative">
-                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active V-Cards</p>
-                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><i class="ph ph-credit-card text-xl font-bold"></i></div>
+                        <p class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">Active V-Cards</p>
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><i class="ph ph-credit-card text-lg md:text-xl font-bold"></i></div>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">1,204</h3>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight mt-1">1,204</h3>
                     <div class="flex items-center justify-between mt-3">
-                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> API Online</span>
+                        <span class="text-[10px] md:text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 md:px-2.5 rounded-md flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> API Online</span>
                         <span class="text-[10px] text-slate-400 font-semibold group-hover:text-purple-500 transition flex items-center gap-1">Issuing logs <i class="ph ph-arrow-right"></i></span>
                     </div>
                 </div>
 
-                <div onclick="openDetailsModal('pending_salaries')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-200">
+                <div onclick="openDetailsModal('pending_salaries')" class="bg-white rounded-2xl p-5 md:p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-200">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                     <div class="flex justify-between items-start mb-4 relative">
-                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Pending Payroll</p>
-                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="ph ph-money text-xl font-bold"></i></div>
+                        <p class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">Pending Payroll</p>
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="ph ph-money text-lg md:text-xl font-bold"></i></div>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">3 Batches</h3>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight mt-1">3 Batches</h3>
                     <div class="flex items-center justify-between mt-3">
-                        <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Auth Required</span>
+                        <span class="text-[10px] md:text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 md:px-2.5 rounded-md">Auth Required</span>
                         <span class="text-[10px] text-slate-400 font-semibold group-hover:text-blue-500 transition flex items-center gap-1">Review <i class="ph ph-arrow-right"></i></span>
                     </div>
                 </div>
 
-                <div onclick="openDetailsModal('failed_transfers')" class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-300">
+                <div onclick="openDetailsModal('failed_transfers')" class="bg-white rounded-2xl p-5 md:p-6 border border-slate-200/60 shadow-sm card-hover cursor-pointer interactive-press relative overflow-hidden group delay-300">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-rose-500/10 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                     <div class="flex justify-between items-start mb-4 relative">
-                        <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Failed Transfers</p>
-                        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="ph ph-warning-octagon text-xl font-bold"></i></div>
+                        <p class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-wider">Failed Transfers</p>
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center"><i class="ph ph-warning-octagon text-lg md:text-xl font-bold"></i></div>
                     </div>
-                    <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight mt-1">12</h3>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight mt-1">12</h3>
                     <div class="flex items-center justify-between mt-3">
-                        <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md">Check Gateway Logs</span>
+                        <span class="text-[10px] md:text-xs font-bold text-rose-600 bg-rose-50 px-2 py-1 md:px-2.5 rounded-md">Check Gateway Logs</span>
                         <span class="text-[10px] text-slate-400 font-semibold group-hover:text-rose-500 transition flex items-center gap-1">Errors <i class="ph ph-arrow-right"></i></span>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6 mb-8 opacity-0 animate-fade-in-up delay-300">
-                <div class="flex justify-between items-center mb-6">
+            <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-4 md:p-6 mb-8 opacity-0 animate-fade-in-up delay-300">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <div>
                         <h3 class="font-bold text-slate-800 text-lg">Platform Transaction Volume</h3>
                         <p class="text-xs text-slate-500 font-medium mt-1">Total volume moved across all gateways (KES)</p>
                     </div>
-                    <div class="bg-slate-100 p-1 rounded-lg flex text-sm font-semibold">
-                        <button class="px-4 py-1.5 bg-white text-indigo-600 rounded shadow-sm">7D</button>
-                        <button class="px-4 py-1.5 text-slate-500 hover:text-slate-800">30D</button>
-                        <button class="px-4 py-1.5 text-slate-500 hover:text-slate-800">1Y</button>
+                    <div class="bg-slate-100 p-1 rounded-lg flex text-sm font-semibold w-full sm:w-auto overflow-x-auto">
+                        <button class="flex-1 sm:flex-none px-4 py-1.5 bg-white text-indigo-600 rounded shadow-sm">7D</button>
+                        <button class="flex-1 sm:flex-none px-4 py-1.5 text-slate-500 hover:text-slate-800">30D</button>
+                        <button class="flex-1 sm:flex-none px-4 py-1.5 text-slate-500 hover:text-slate-800">1Y</button>
                     </div>
                 </div>
-                <div class="relative h-[300px] w-full">
+                <div class="relative h-[250px] md:h-[300px] w-full">
                     <canvas id="adminVolumeChart"></canvas>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 opacity-0 animate-fade-in-up delay-400">
-                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8 opacity-0 animate-fade-in-up delay-400">
+                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-4 md:p-6">
                     <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                         <h3 class="font-bold text-slate-800 text-lg">System Configuration</h3>
                         <button class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition">View All</button>
                     </div>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-200 transition">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-200 transition gap-4">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-white shadow-sm text-indigo-600 rounded-full flex items-center justify-center border border-slate-100"><i class="ph ph-credit-card text-xl font-bold"></i></div>
+                                <div class="w-10 h-10 bg-white shadow-sm text-indigo-600 rounded-full flex items-center justify-center border border-slate-100 shrink-0"><i class="ph ph-credit-card text-xl font-bold"></i></div>
                                 <div>
                                     <p class="font-bold text-slate-800 text-sm">Virtual Card API</p>
                                     <p class="text-xs text-slate-500 font-medium mt-0.5">Stripe Issuing Engine</p>
                                 </div>
                             </div>
-                            <button onclick="openConfigModal('Virtual Card API', 'Manage Stripe Webhooks & Keys')" class="text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
+                            <button onclick="openConfigModal('Virtual Card API', 'Manage Stripe Webhooks & Keys')" class="w-full sm:w-auto text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2.5 sm:py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
                         </div>
-                        <div class="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-blue-200 transition">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-blue-200 transition gap-4">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-white shadow-sm text-blue-600 rounded-full flex items-center justify-center border border-slate-100"><i class="ph ph-download-simple text-xl font-bold"></i></div>
+                                <div class="w-10 h-10 bg-white shadow-sm text-blue-600 rounded-full flex items-center justify-center border border-slate-100 shrink-0"><i class="ph ph-download-simple text-xl font-bold"></i></div>
                                 <div>
                                     <p class="font-bold text-slate-800 text-sm">Deposit Methods</p>
                                     <p class="text-xs text-slate-500 font-medium mt-0.5">M-PESA, Visa/Mastercard</p>
                                 </div>
                             </div>
-                            <button onclick="openConfigModal('Deposit Gateways', 'Configure Paybill & Cards')" class="text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
+                            <button onclick="openConfigModal('Deposit Gateways', 'Configure Paybill & Cards')" class="w-full sm:w-auto text-xs font-bold text-slate-700 bg-white border border-slate-300 px-4 py-2.5 sm:py-2 rounded-lg hover:bg-slate-100 transition interactive-press shadow-sm">Configure</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-6">
+                <div class="bg-white border border-slate-200/70 rounded-2xl shadow-sm p-4 md:p-6">
                     <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                         <h3 class="font-bold text-slate-800 text-lg">Corporate Salary Disbursement</h3>
                     </div>
-                    <div class="border border-slate-200 rounded-xl p-5 bg-gradient-to-r from-slate-50 to-white shadow-sm">
+                    <div class="border border-slate-200 rounded-xl p-4 md:p-5 bg-gradient-to-r from-slate-50 to-white shadow-sm">
                         <div class="flex items-center gap-3 mb-2">
                             <i class="ph ph-file-csv text-2xl text-emerald-600"></i>
                             <h4 class="font-bold text-slate-800 text-md">Batch Engine</h4>
                         </div>
-                        <p class="text-sm text-slate-500 mb-5 font-medium pl-9">Process bulk employee payments via CSV upload. Auto-routes to internal and external banks.</p>
+                        <p class="text-xs md:text-sm text-slate-500 mb-5 font-medium pl-9">Process bulk employee payments via CSV upload. Auto-routes to internal and external banks.</p>
                         <input type="file" id="csvUpload" accept=".csv" class="hidden" onchange="processSalaryUpload(event)">
-                        <button onclick="document.getElementById('csvUpload').click()" id="uploadBtn" class="w-full py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition flex justify-center items-center gap-2 interactive-press shadow-md">
+                        <button onclick="document.getElementById('csvUpload').click()" id="uploadBtn" class="w-full py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition flex justify-center items-center gap-2 interactive-press shadow-md text-sm md:text-base">
                             <span id="uploadBtnText">Upload Salary Batch (.csv)</span>
                             <i id="uploadSpinner" class="ph ph-spinner-gap animate-spin hidden ml-2 text-xl"></i>
                         </button>
@@ -361,32 +385,32 @@
             </div>
 
             <div id="masterLogs" class="bg-white border border-slate-200/70 rounded-2xl shadow-sm overflow-hidden opacity-0 animate-fade-in-up delay-500 scroll-mt-24">
-                <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/50">
+                <div class="px-4 md:px-6 py-5 border-b border-slate-200 bg-slate-50/50">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                         <h3 class="font-bold text-slate-800 text-xl">Master Auditing Logs</h3>
-                        <div class="flex gap-3 w-full md:w-auto">
-                            <div class="relative flex-1 md:w-64">
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <div class="relative w-full sm:w-64">
                                 <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-lg"></i>
                                 <input type="text" placeholder="Search Trx ID, User..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
                             </div>
-                            <button class="px-4 py-2 border border-slate-300 bg-white rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 shadow-sm interactive-press shrink-0"><i class="ph ph-download-simple text-lg"></i> Export</button>
+                            <button class="w-full sm:w-auto px-4 py-2 border border-slate-300 bg-white rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-2 shadow-sm interactive-press shrink-0"><i class="ph ph-download-simple text-lg"></i> Export</button>
                         </div>
                     </div>
-                    <div class="flex space-x-6">
-                        <button onclick="switchLogTab('transfers')" id="tab-transfers" class="text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-sm uppercase tracking-wide">Fund Transfers</button>
-                        <button onclick="switchLogTab('deposits')" id="tab-deposits" class="text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-sm uppercase tracking-wide">Add Money</button>
+                    <div class="flex space-x-4 md:space-x-6 overflow-x-auto pb-1 hide-scrollbar">
+                        <button onclick="switchLogTab('transfers')" id="tab-transfers" class="text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-xs md:text-sm uppercase tracking-wide whitespace-nowrap">Fund Transfers</button>
+                        <button onclick="switchLogTab('deposits')" id="tab-deposits" class="text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-xs md:text-sm uppercase tracking-wide whitespace-nowrap">Add Money</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
                         <thead class="bg-white text-slate-500 border-b border-slate-100">
                             <tr>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Trx ID</th>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Date</th>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">User</th>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Details</th>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Status</th>
-                                <th class="px-6 py-4 font-bold tracking-widest uppercase text-[10px] text-right">Amount</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Trx ID</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Date</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px]">User</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Details</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px]">Status</th>
+                                <th class="px-4 md:px-6 py-4 font-bold tracking-widest uppercase text-[10px] text-right">Amount</th>
                             </tr>
                         </thead>
                         <tbody id="masterLogsBody" class="divide-y divide-slate-50 bg-white"></tbody>
@@ -397,31 +421,31 @@
         </div>
     </main>
 
-    <div id="detailsModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-3xl p-0 max-w-2xl w-full mx-4 shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[80vh]" id="detailsModalContent">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-3xl">
+    <div id="detailsModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-3xl p-0 max-w-2xl w-full shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[90vh] overflow-hidden" id="detailsModalContent">
+            <div class="px-4 md:px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-3xl shrink-0">
                 <div>
-                    <h3 id="detailsModalTitle" class="text-xl font-bold text-slate-800">Details</h3>
+                    <h3 id="detailsModalTitle" class="text-lg md:text-xl font-bold text-slate-800">Details</h3>
                     <p id="detailsModalSubtitle" class="text-xs text-slate-500 font-medium mt-1">Detailed breakdown of the selected metric.</p>
                 </div>
-                <button onclick="closeDetailsModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition interactive-press"><i class="ph ph-x font-bold"></i></button>
+                <button onclick="closeDetailsModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition interactive-press shrink-0"><i class="ph ph-x font-bold"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1">
-                <table class="w-full text-left text-sm">
-                    <thead id="detailsModalThead" class="text-slate-500 border-b border-slate-100 font-bold uppercase text-[10px] tracking-wider">
+            <div class="p-0 overflow-y-auto flex-1 overflow-x-auto">
+                <table class="w-full text-left text-xs md:text-sm whitespace-nowrap min-w-[500px]">
+                    <thead id="detailsModalThead" class="text-slate-500 border-b border-slate-100 font-bold uppercase text-[10px] tracking-wider bg-white sticky top-0">
                     </thead>
                     <tbody id="detailsModalTbody" class="divide-y divide-slate-50">
                     </tbody>
                 </table>
             </div>
-            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-3xl flex justify-end">
+            <div class="px-4 md:px-6 py-4 border-t border-slate-100 bg-slate-50 rounded-b-3xl flex justify-end shrink-0">
                 <button onclick="closeDetailsModal()" class="px-6 py-2 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition interactive-press">Close</button>
             </div>
         </div>
     </div>
 
-    <div id="configModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all scale-95 opacity-0" id="configModalContent">
+    <div id="configModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity p-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl transform transition-all scale-95 opacity-0" id="configModalContent">
             <h3 id="modalTitle" class="text-xl font-bold text-slate-800 mb-1">Configuration</h3>
             <p id="modalSubtitle" class="text-sm text-slate-500 mb-6 font-medium">Manage gateway settings.</p>
             <form id="configForm" onsubmit="saveAdminConfig(event)" class="space-y-5">
@@ -439,7 +463,7 @@
                 <div class="flex space-x-3 pt-4 border-t border-slate-100 mt-6">
                     <button type="button" onclick="closeAdminModal()" class="w-1/3 py-3 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition interactive-press">Cancel</button>
                     <button type="submit" class="w-2/3 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/30 interactive-press flex justify-center items-center">
-                        <span id="saveConfigBtnText">Save Changes</span>
+                        <span id="saveConfigBtnText">Save</span>
                         <i id="saveConfigSpinner" class="ph ph-spinner-gap animate-spin hidden ml-2 text-xl"></i>
                     </button>
                 </div>
@@ -447,7 +471,7 @@
         </div>
     </div>
 
-    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-50 border border-slate-700">
+    <div id="toast" class="hidden fixed bottom-4 md:bottom-8 right-4 md:right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 transform transition-all translate-y-10 opacity-0 z-[70] border border-slate-700 max-w-[calc(100vw-2rem)]">
         <i id="toastIcon" class="ph ph-check-circle text-emerald-400 text-2xl font-fill"></i>
         <div>
             <h4 id="toastTitle" class="font-bold tracking-wide text-sm">Success</h4>
@@ -456,7 +480,33 @@
     </div>
 
     <script>
-        // --- 1. DYNAMIC MODAL FOR TOP CARDS ---
+        // --- MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const backdrop = document.getElementById('mobileBackdrop');
+            const isClosed = sidebar.style.transform === 'translateX(-100%)';
+
+            if (isClosed) {
+                sidebar.style.transform = 'translateX(0)';
+                backdrop.classList.remove('hidden');
+                setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
+            } else {
+                closeMobileMenu();
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const backdrop = document.getElementById('mobileBackdrop');
+            
+            sidebar.style.transform = 'translateX(-100%)';
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => backdrop.classList.add('hidden'), 300);
+            document.body.style.overflow = ''; 
+        }
+
+        // --- DYNAMIC MODAL FOR TOP CARDS ---
         const popupData = {
             volume: {
                 title: "Volume Breakdown (24h)", sub: "Top transaction gateways by volume.",
@@ -502,14 +552,16 @@
             document.getElementById('detailsModalSubtitle').innerText = data.sub;
 
             const thead = document.getElementById('detailsModalThead');
-            thead.innerHTML = `<tr>${data.headers.map(h => `<th class="py-3 px-4">${h}</th>`).join('')}</tr>`;
+            thead.innerHTML = `<tr>${data.headers.map(h => `<th class="py-3 px-4 md:px-6">${h}</th>`).join('')}</tr>`;
 
             const tbody = document.getElementById('detailsModalTbody');
             tbody.innerHTML = data.rows.map(row => 
-                `<tr class="hover:bg-slate-50 transition"><td class="py-3 px-4 font-bold text-slate-800">${row[0]}</td>
-                <td class="py-3 px-4 text-slate-600">${row[1]}</td>
-                <td class="py-3 px-4">${row[2]}</td>
-                <td class="py-3 px-4 font-bold">${row[3]}</td></tr>`
+                `<tr class="hover:bg-slate-50 transition">
+                    <td class="py-3 px-4 md:px-6 font-bold text-slate-800">${row[0]}</td>
+                    <td class="py-3 px-4 md:px-6 text-slate-600">${row[1]}</td>
+                    <td class="py-3 px-4 md:px-6">${row[2]}</td>
+                    <td class="py-3 px-4 md:px-6 font-bold">${row[3]}</td>
+                </tr>`
             ).join('');
 
             const modal = document.getElementById('detailsModal');
@@ -529,7 +581,7 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
-        // --- 2. ADMIN CHART & MISC LOGIC ---
+        // --- ADMIN CHART & MISC LOGIC ---
         document.addEventListener("DOMContentLoaded", function() {
             Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
             const ctx = document.getElementById('adminVolumeChart').getContext('2d');
@@ -553,8 +605,8 @@
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#f1f5f9', drawBorder: false }, ticks: { font: { size: 11, weight: '600' }, color: '#94a3b8', callback: val => (val/1000000) + 'M' } },
-                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { size: 12, weight: '600' }, color: '#64748b' } }
+                        y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#f1f5f9', drawBorder: false }, ticks: { font: { size: 10, weight: '600' }, color: '#94a3b8', callback: val => (val/1000000) + 'M' } },
+                        x: { grid: { display: false, drawBorder: false }, ticks: { font: { size: 11, weight: '600' }, color: '#64748b' } }
                     },
                     interaction: { mode: 'nearest', axis: 'x', intersect: false }
                 }
@@ -563,7 +615,6 @@
             renderTable('transfers');
         });
 
-        // Original Log Data
         const logData = {
             transfers: [{ id: "TRX-88291A", date: "Today, 10:14 AM", user: "John Doe (4589)", details: "To: Equity Bank", status: "Completed", amount: "KES 15,000.00" }],
             deposits: [{ id: "DEP-99110X", date: "Today, 11:05 AM", user: "Mike Johnson", details: "M-PESA Paybill", status: "Completed", amount: "KES 50,000.00" }]
@@ -576,16 +627,21 @@
             data.forEach(log => {
                 const badge = log.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100';
                 tbody.insertAdjacentHTML('beforeend', `
-                    <tr class="hover:bg-slate-50/70 transition"><td class="px-6 py-4 font-mono text-xs font-bold text-indigo-600">${log.id}</td>
-                    <td class="px-6 py-4 text-slate-500 font-medium text-xs">${log.date}</td><td class="px-6 py-4 font-bold">${log.user}</td>
-                    <td class="px-6 py-4 text-sm">${log.details}</td><td class="px-6 py-4"><span class="px-2 py-1 ${badge} rounded text-[10px] uppercase font-bold border">${log.status}</span></td>
-                    <td class="px-6 py-4 font-extrabold text-right">${log.amount}</td></tr>
+                    <tr class="hover:bg-slate-50/70 transition">
+                        <td class="px-4 md:px-6 py-4 font-mono text-xs font-bold text-indigo-600">${log.id}</td>
+                        <td class="px-4 md:px-6 py-4 text-slate-500 font-medium text-xs">${log.date}</td>
+                        <td class="px-4 md:px-6 py-4 font-bold">${log.user}</td>
+                        <td class="px-4 md:px-6 py-4 text-xs md:text-sm">${log.details}</td>
+                        <td class="px-4 md:px-6 py-4"><span class="px-2 py-1 ${badge} rounded text-[10px] uppercase font-bold border">${log.status}</span></td>
+                        <td class="px-4 md:px-6 py-4 font-extrabold text-right">${log.amount}</td>
+                    </tr>
                 `);
             });
         }
+
         function switchLogTab(tab) {
             ['transfers', 'deposits'].forEach(t => {
-                document.getElementById(`tab-${t}`).className = (t === tab) ? "text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-sm uppercase tracking-wide" : "text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-sm uppercase tracking-wide";
+                document.getElementById(`tab-${t}`).className = (t === tab) ? "text-indigo-600 font-bold border-b-2 border-indigo-600 pb-2 px-1 transition text-xs md:text-sm uppercase tracking-wide whitespace-nowrap" : "text-slate-500 hover:text-slate-800 font-bold pb-2 px-1 transition text-xs md:text-sm uppercase tracking-wide whitespace-nowrap";
             });
             renderTable(tab);
         }
@@ -597,8 +653,8 @@
         
         function closeAllDropdowns(e) { 
             const notif = document.getElementById('notifDropdown'); const prof = document.getElementById('profileDropdown');
-            if (!notif.contains(e.target) && !document.getElementById('notifBtn').contains(e.target)) { notif.classList.add('opacity-0', 'scale-95'); setTimeout(() => notif.classList.add('hidden'), 200); }
-            if (!prof.contains(e.target) && !document.getElementById('profileBtn').contains(e.target)) { prof.classList.add('opacity-0', 'scale-95'); setTimeout(() => prof.classList.add('hidden'), 200); }
+            if (notif && !notif.contains(e.target) && !document.getElementById('notifBtn').contains(e.target)) { notif.classList.add('opacity-0', 'scale-95'); setTimeout(() => notif.classList.add('hidden'), 200); }
+            if (prof && !prof.contains(e.target) && !document.getElementById('profileBtn').contains(e.target)) { prof.classList.add('opacity-0', 'scale-95'); setTimeout(() => prof.classList.add('hidden'), 200); }
         }
 
         function openConfigModal(title, sub) { document.getElementById('modalTitle').innerText = title; document.getElementById('modalSubtitle').innerText = sub; const m = document.getElementById('configModal'), c = document.getElementById('configModalContent'); m.classList.remove('hidden'); setTimeout(() => c.classList.remove('scale-95', 'opacity-0'), 10); }
@@ -614,7 +670,7 @@
         function showToast(title, msg, icon='ph-check-circle', color='text-emerald-400') {
             const t = document.getElementById('toast');
             document.getElementById('toastTitle').innerText = title; document.getElementById('toastMessage').innerText = msg;
-            document.getElementById('toastIcon').className = `ph ${icon} ${color} text-2xl font-fill`;
+            document.getElementById('toastIcon').className = `ph ${icon} ${color} text-2xl font-fill shrink-0`;
             t.classList.remove('hidden'); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10);
             setTimeout(() => { t.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => t.classList.add('hidden'), 300); }, 3500);
         }
